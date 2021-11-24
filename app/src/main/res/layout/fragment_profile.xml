@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context=".Fragment.ProfileFragment">
+
+    <RelativeLayout
+         android:layout_width="wrap_content"
+         android:paddingRight="10dp"
+        android:paddingTop="30dp"
+         android:layout_height="wrap_content">
+
+         <Button
+             android:layout_alignParentEnd="true"
+             android:layout_width="150dp"
+             android:id="@+id/profil_fragment_edit_button"
+             android:layout_marginBottom="40dp"
+             android:text="Düzenle"
+             android:visibility="visible"
+             android:layout_height="50dp"/>
+        <Button
+            android:layout_alignParentEnd="true"
+            android:layout_width="150dp"
+            android:id="@+id/profil_fragment_cancel_button"
+            android:layout_marginBottom="40dp"
+            android:text="İptal"
+            android:visibility="gone"
+            android:layout_height="50dp"/>
+
+     </RelativeLayout>
+
+   <RelativeLayout
+       android:layout_width="wrap_content"
+       android:layout_gravity="center"
+       android:layout_marginTop="15dp"
+       android:layout_height="wrap_content">
+
+
+       <de.hdodenhof.circleimageview.CircleImageView
+           android:id="@+id/profil_fragment_user_img_profil"
+           android:layout_width="156dp"
+           android:layout_height="156dp"
+
+           app:layout_constraintBottom_toBottomOf="parent"
+           app:layout_constraintEnd_toEndOf="parent"
+           app:layout_constraintStart_toStartOf="parent"
+           app:layout_constraintTop_toTopOf="parent" />
+
+       <ImageView
+           android:id="@+id/profil_fragment_set_newImg"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_alignRight="@+id/profil_fragment_user_img_profil"
+           android:layout_alignBottom="@id/profil_fragment_user_img_profil"
+           android:layout_marginRight="2dp"
+           android:layout_marginBottom="2dp"
+           android:visibility="gone"
+           android:src="@drawable/ic_camera" />
+
+   </RelativeLayout>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:id="@+id/profil_fragment_edit_user_userName"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="50dp"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:enabled="false"
+        android:background="@drawable/profil_edit_bg"
+        android:layout_height="50dp"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:id="@+id/profil_fragment_edit_user_email"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="20dp"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:text="user@domain.com"
+        android:enabled="false"
+        android:background="@drawable/profil_edit_bg"
+        android:layout_height="50dp"/>
+
+    <Button
+        android:layout_width="100dp"
+        android:text="Onayla"
+        android:visibility="gone"
+        android:id="@+id/profil_fragment_onay_button"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="150dp"
+        android:layout_height="50dp"/>
+
+</LinearLayout>

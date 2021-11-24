@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">PlayTogether</string>
+    <string name="nav_open">Open</string>
+    <string name="nav_close">Close</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string-array name="game_list">
+        <item>Select Game</item>
+        <item>League of Legends</item>
+        <item>Valorant</item>
+        <item>CS:GO</item>
+        <item>Pubg</item>
+        <item>Farketmez</item>
+    </string-array>
+    <string-array name="gender_list">
+        <item>Random</item>
+        <item>Erkek</item>
+        <item>Kadın</item>
+    </string-array>
+
+    <string-array name="non_premium">
+
+        <item>Random</item>
+
+    </string-array>
+
+</resources>

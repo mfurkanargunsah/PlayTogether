@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "468788199473",
+    "project_id": "playtogether-cab25",
+    "storage_bucket": "playtogether-cab25.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:468788199473:android:e2b4cfce99958fff621510",
+        "android_client_info": {
+          "package_name": "com.valorain.playtogether"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "468788199473-o8rin8rjcmmaeie5r1k1g28qh3c8rr3d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.valorain.playtogether",
+            "certificate_hash": "257a64858b77b8a6b60dbf3e075a75a1b68bd49e"
+          }
+        },
+        {
+          "client_id": "468788199473-oro08n3g14ij865gh7sm0o8pbfho4afm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJ-vsEk_-tlvxZWoMkMQC27ZXNvMbRKAs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "468788199473-oro08n3g14ij865gh7sm0o8pbfho4afm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
