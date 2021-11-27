@@ -193,11 +193,13 @@ public class ProfileFragment extends Fragment {
 
 
 
+
                     mFireStore.collection("Kullanıcılar").document(mUser.getUid())
-                            .update("kullaniciAdi",txtUserName)
+                            .update("kullaniciAdi",edt_userName.getText().toString())
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void unused) {
+                                   nameUpdate(edt_userName);
                                     Toast.makeText(v.getContext(), "Başarıyla Güncellendi", Toast.LENGTH_SHORT).show();
                                 }
                             });
@@ -324,6 +326,35 @@ public class ProfileFragment extends Fragment {
 
                                 mData = new HashMap<>();
                                 mData.put("kullaniciProfil",link);
+                                mFireStore.collection("ChatRoom").document(snp.getData().get("userID").toString()).collection("Kanallar").document(mUser.getUid())
+                                        .update(mData);
+                            }
+                            Toast.makeText(v.getContext(), "Profiliniz Güncellendi!", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(v.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    private void nameUpdate(final EditText nameUp){
+        mQuery = mFireStore.collection("ChatRoom").document(mUser.getUid()).collection("Kanallar");
+        mQuery.get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                        if (queryDocumentSnapshots.getDocuments().size() > 0){
+
+                            for (DocumentSnapshot snp : queryDocumentSnapshots.getDocuments()){
+
+                                mData = new HashMap<>();
+                                mData.put("kullaniciAdi",edt_userName.getText().toString());
 
                                 mFireStore.collection("ChatRoom").document(snp.getData().get("userID").toString()).collection("Kanallar").document(mUser.getUid())
                                         .update(mData);

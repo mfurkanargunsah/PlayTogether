@@ -70,6 +70,7 @@
         android:layout_marginTop="50dp"
         android:textAlignment="center"
         android:textColor="@color/white"
+        android:text="Name"
         android:textStyle="bold"
         android:enabled="false"
         android:background="@drawable/profil_edit_bg"

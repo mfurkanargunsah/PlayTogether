@@ -192,21 +192,14 @@ public class MainActivity extends AppCompatActivity {
 
                     case R.id.nav_menu_profile:
                         setHomeFragment(profileFragment);
-                        mToolbar.setTitle("Profile");
+                        mToolbar.setTitle("Profil");
                         mDrawer.closeDrawer(GravityCompat.START);
                         return true;
 
-                    case R.id.nav_menu_friends:
-
-                        setHomeFragment(friendsFragment);
-                        mToolbar.setTitle("Friends");
-                        mDrawer.closeDrawer(GravityCompat.START);
-                        return true;
-
-                    case R.id.nav_menu_chat:
+                        case R.id.nav_menu_chat:
 
                         setHomeFragment(chatFragment);
-                        mToolbar.setTitle("Chat");
+                        mToolbar.setTitle("Sohbetler");
                         mDrawer.closeDrawer(GravityCompat.START);
                         return true;
 
