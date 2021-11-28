@@ -12,6 +12,8 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:layout_width="100dp"
+            android:layout_marginLeft="20dp"
+            android:scaleType="centerCrop"
             android:id="@+id/nav_header_userPic"
             android:layout_height="100dp"
             />
@@ -52,6 +54,16 @@
                 android:paddingTop="10dp"
                 android:textColor="@color/white"
                 android:textSize="17sp" />
+            <Button
+                android:layout_marginRight="50dp"
+                android:layout_marginBottom="40dp"
+                android:textSize="10dp"
+                android:id="@+id/nav_header_buyPremium"
+                android:backgroundTint="@color/loginButtonColor"
+                android:visibility="gone"
+                android:layout_width="110dp"
+                android:text="buy premium"
+                android:layout_height="33dp"/>
         </LinearLayout>
 
     </LinearLayout>
