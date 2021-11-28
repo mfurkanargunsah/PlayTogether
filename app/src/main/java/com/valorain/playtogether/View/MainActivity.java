@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -69,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
     public View hView;
     public TextView userMail,status;
     public CircleImageView userPic;
+    private Button buyPremium;
     private static final String ONESIGNAL_APP_ID = "4852c54f-44bb-481c-80f8-e0167adcde29";
 
 
@@ -144,6 +146,8 @@ public class MainActivity extends AppCompatActivity {
                 hView = mNav.getHeaderView(0);
                 userMail = hView.findViewById(R.id.showUserMail);
                 userMail.setText(mUser.getEmail());
+                userPic = hView.findViewById(R.id.nav_header_userPic);
+                buyPremium = hView.findViewById(R.id.nav_header_buyPremium);
 
 
                 mNav.setNavigationItemSelectedListener(null);
@@ -164,14 +168,25 @@ public class MainActivity extends AppCompatActivity {
 
                             if (user != null) {
                                 status.setText(user.getStatus());
+                                if (user.getKullaniciProfil().equals("default")) {
+                                    userPic.setImageResource(R.mipmap.ic_launcher);
+                                } else {
+                                    Picasso.get().load(user.getKullaniciProfil()).into(userPic);
+                                }
+
+                                if (user.isPremium() == true)
+                                    buyPremium.setVisibility(View.GONE);
+                                else
+                                    buyPremium.setVisibility(View.VISIBLE);
+
                             }
                         }
+
                     }
                 });
             }
 
             ////////////
-
 
 
 

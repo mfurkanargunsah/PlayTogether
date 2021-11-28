@@ -65,7 +65,7 @@ public class ProfileFragment extends Fragment {
     private static final int IZIN_KODU = 0;
     private static final int IZIN_ALINDI_KODU = 1;
     private EditText edt_userName, edt_Email;
-    private CircleImageView imgProfil;
+    private ImageView imgProfil;
     private ImageView  newImg;
     private Button btn_edt, btn_cancel, btn_perm;
     private View v;
@@ -126,7 +126,7 @@ public class ProfileFragment extends Fragment {
                                     if (user.getKullaniciProfil().equals("default"))
                                         imgProfil.setImageResource(R.mipmap.ic_launcher);
                                     else
-                                        Picasso.get().load(user.getKullaniciProfil()).resize(156,156).into(imgProfil);
+                                        Picasso.get().load(user.getKullaniciProfil()).into(imgProfil);
 
                                 }
                             }

@@ -72,7 +72,7 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.Mesajl
             holder.kullaniciProfil.setImageResource(R.mipmap.ic_launcher);
 
         else
-            Picasso.get().load(mKullanici.getKullaniciProfil()).resize(60,60).into(holder.kullaniciProfil);
+            Picasso.get().load(mKullanici.getKullaniciProfil()).into(holder.kullaniciProfil);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

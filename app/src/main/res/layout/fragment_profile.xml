@@ -41,9 +41,9 @@
 
        <de.hdodenhof.circleimageview.CircleImageView
            android:id="@+id/profil_fragment_user_img_profil"
-           android:layout_width="156dp"
-           android:layout_height="156dp"
-
+           android:layout_width="160dp"
+           android:layout_height="160dp"
+           android:scaleType="centerCrop"
            app:layout_constraintBottom_toBottomOf="parent"
            app:layout_constraintEnd_toEndOf="parent"
            app:layout_constraintStart_toStartOf="parent"

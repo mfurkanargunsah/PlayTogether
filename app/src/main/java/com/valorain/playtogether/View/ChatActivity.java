@@ -121,7 +121,7 @@ public class ChatActivity extends AppCompatActivity {
                             if (hedefKullanici.getKullaniciProfil().equals("default"))
                                 targetPhoto.setImageResource(R.mipmap.ic_launcher);
                             else
-                                Picasso.get().load(hedefKullanici.getKullaniciProfil()).resize(60,60).into(targetPhoto);
+                                Picasso.get().load(hedefKullanici.getKullaniciProfil()).into(targetPhoto);
 
                         }
 
