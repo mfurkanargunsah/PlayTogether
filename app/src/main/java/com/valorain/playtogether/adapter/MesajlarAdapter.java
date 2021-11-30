@@ -6,6 +6,7 @@ import android.view.ContentInfo;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -110,6 +111,7 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.Mesajl
 
        TextView kullaniciIsmi,sonMesaj;
        CircleImageView kullaniciProfil;
+
 
 
        public MesajlarHolder(@NonNull View itemView) {
