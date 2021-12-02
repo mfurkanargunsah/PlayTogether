@@ -126,6 +126,7 @@
         android:text="With"
         android:textColor="@color/white"
         android:textSize="30sp"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="@+id/btnLogin"
         app:layout_constraintHorizontal_bias="0.509"
         app:layout_constraintStart_toStartOf="@+id/btnLogin"
@@ -138,6 +139,7 @@
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="@+id/textView6"
         app:layout_constraintStart_toStartOf="@+id/textView6"
+        android:visibility="invisible"
         app:layout_constraintTop_toBottomOf="@+id/textView6"
         app:srcCompat="@drawable/google" />
 </androidx.constraintlayout.widget.ConstraintLayout>

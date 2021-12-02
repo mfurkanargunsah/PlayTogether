@@ -4,6 +4,15 @@
     <string name="nav_close">Close</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="yeni_hesap_olu_tur">Yeni Hesap Oluştur</string>
+    <string name="kullan_c_ad">Kullanıcı Adı</string>
+    <string name="eposta">Eposta</string>
+    <string name="Sifre">Şifre</string>
+    <string name="erkek">Erkek</string>
+    <string name="kadin">Kadın</string>
+    <string name="cinsiyetiniz">Cinsiyetiniz:</string>
+    <string name="kullanicisözlesmesi">Kullanım koşulları ve gizlilik sözleşmesini okudum, kabul ediyorum.</string>
+    <string name="hesap_olu_tur">Hesap Oluştur</string>
 
     <string-array name="game_list">
         <item>Select Game</item>
@@ -24,5 +33,8 @@
         <item>Random</item>
 
     </string-array>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="galeriye_kaydet">Galeriye Kaydet</string>
 
 </resources>

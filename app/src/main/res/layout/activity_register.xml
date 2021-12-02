@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="80dp"
-        android:text="New Account"
+        android:text="@string/yeni_hesap_olu_tur"
         android:textColor="@color/white"
         android:textSize="36sp"
         android:textStyle="bold"
@@ -27,7 +27,7 @@
         android:layout_marginTop="44dp"
         android:background="@drawable/edittextbg"
         android:ems="10"
-        android:hint="Username"
+        android:hint="@string/kullan_c_ad"
         android:inputType="textPersonName"
         android:padding="15dp"
         app:layout_constraintEnd_toEndOf="@+id/textView7"
@@ -42,7 +42,7 @@
         android:layout_marginTop="16dp"
         android:background="@drawable/edittextbg"
         android:ems="10"
-        android:hint="Email"
+        android:hint="@string/eposta"
         android:inputType="textEmailAddress"
         android:padding="15dp"
         app:layout_constraintEnd_toEndOf="@+id/edtUserName"
@@ -57,7 +57,7 @@
         android:layout_marginTop="16dp"
         android:background="@drawable/edittextbg"
         android:ems="10"
-        android:hint="Password"
+        android:hint="@string/Sifre"
         android:inputType="textPassword"
         android:padding="15dp"
         app:layout_constraintEnd_toEndOf="@+id/edtEmail"
@@ -78,14 +78,14 @@
             android:id="@+id/radioErkek"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Erkek"
+            android:text="@string/erkek"
             android:textColor="@color/white" />
 
         <RadioButton
             android:id="@+id/radioKadın"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Kadın"
+            android:text="@string/kadin"
             android:textColor="@color/white" />
     </RadioGroup>
 
@@ -94,7 +94,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Cinsiyetiniz:"
+        android:text="@string/cinsiyetiniz"
         android:textColor="@color/white"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="@+id/edtPassword"
@@ -105,9 +105,9 @@
     <CheckBox
         android:id="@+id/checkBoxS"
         android:layout_width="345dp"
-        android:layout_height="40dp"
+        android:layout_height="48dp"
         android:layout_marginTop="164dp"
-        android:text="Kullanım koşulları ve gizlilik sözleşmesini okudum, kabul ediyorum."
+        android:text="@string/kullanicisözlesmesi"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="@+id/edtPassword"
         app:layout_constraintHorizontal_bias="0.488"
@@ -123,7 +123,7 @@
         android:height="51dp"
         android:enabled="false"
         android:backgroundTint="@color/loginButtonColor"
-        android:text="CREATE ACCOUNT"
+        android:text="@string/hesap_olu_tur"
         app:layout_constraintEnd_toEndOf="@+id/checkBoxS"
         app:layout_constraintStart_toStartOf="@+id/checkBoxS"
         app:layout_constraintTop_toBottomOf="@+id/checkBoxS" />
