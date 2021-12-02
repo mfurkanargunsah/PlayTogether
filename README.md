@@ -1,6 +1,6 @@
 # PlayTogether
 
-PlayTogether oyunculara yönelik bir random eşleşme (duo bulma) uygulamasıdır.
+PlayTogether oyunculara yönelik ve geliştirilme aşamasında olan bir random eşleşme (duo bulma) uygulamasıdır.
 
 ## Galeri
 
