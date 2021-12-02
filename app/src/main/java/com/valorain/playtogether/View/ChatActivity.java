@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -24,6 +25,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -38,6 +40,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -48,6 +51,8 @@ import com.valorain.playtogether.R;
 import com.valorain.playtogether.adapter.ChatAdapter;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,6 +61,7 @@ import java.util.UUID;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ChatActivity extends AppCompatActivity {
+
     private static final int IZIN_KODU = 0;
     private static final int IZIN_ALINDI_KODU = 1;
     private Intent galeriyeGit;
@@ -65,7 +71,6 @@ public class ChatActivity extends AppCompatActivity {
     private ImageDecoder.Source imgSource;
     private ByteArrayOutputStream outputStream;
     private ProgressDialog mProgress;
-
     private byte[] imgByte;
     private HashMap<String,Object> mData;
     private RecyclerView mRecyclerView;
@@ -81,7 +86,7 @@ public class ChatActivity extends AppCompatActivity {
     private FirebaseFirestore mFireStore;
     private String uidadapter;
     private FirebaseUser mUser;
-    private StorageReference mStorageRef, yeniRef, sRef;
+    private StorageReference mStorageRef, yeniRef, sRef,downloadRef;
 
     private LinearLayoutManager mManager;
     private Query chatQuery;
@@ -108,6 +113,7 @@ public class ChatActivity extends AppCompatActivity {
         gelenIntent = getIntent();
         hedefId = gelenIntent.getStringExtra("hedefId");
         mUID = mUser.getUid();
+
 
 
 
@@ -330,6 +336,8 @@ public class ChatActivity extends AppCompatActivity {
                                                                public void onComplete(@NonNull Task<Void> task) {
 
                                                                    if (task.isSuccessful()) {
+
+
                                                                        editMesaj.setText("");
                                                                        progressAyar();
                                                                    }
@@ -381,10 +389,14 @@ public class ChatActivity extends AppCompatActivity {
 
         super.onActivityResult(requestCode, resultCode, data);
     }
+
     private void progressAyar(){
 
         if (mProgress.isShowing())
             mProgress.dismiss();
     }
+
+
+
 
 }

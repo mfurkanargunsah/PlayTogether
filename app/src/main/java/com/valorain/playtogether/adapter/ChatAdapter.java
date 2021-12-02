@@ -1,6 +1,9 @@
 package com.valorain.playtogether.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +18,7 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.valorain.playtogether.Model.Chat;
 import com.valorain.playtogether.R;
+
 
 import java.util.ArrayList;
 
@@ -59,7 +63,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatHolder>
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ChatHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ChatHolder holder, @SuppressLint("RecyclerView") int position) {
         mChat = mChatList.get(position);
         holder.txtMesaj.setText(mChat.getMesajIcerigi());
 
@@ -68,29 +72,34 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatHolder>
             holder.imgResim.setVisibility(View.GONE);
             holder.txtMesaj.setText(mChat.getMesajIcerigi());
         }
-        else{
+        else {
             holder.txtMesaj.setVisibility(View.GONE);
             Picasso.get().load(mChat.getMesajIcerigi()).into(holder.imgResim, new Callback() {
                 @Override
                 public void onSuccess() {
-                        holder.mProgress.setVisibility(View.GONE);
+                    holder.mProgress.setVisibility(View.GONE);
                 }
 
                 @Override
                 public void onError(Exception e) {
-                        e.printStackTrace();
+                    e.printStackTrace();
                 }
             });
 
             holder.imgResim.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    Intent browse = new Intent(Intent.ACTION_VIEW);
+                    browse.setData(Uri.parse(mChatList.get(position).getMesajIcerigi()));
+                    mContext.startActivity(browse);
+
 
                 }
+
             });
+
+
         }
-
-
     }
 
     @Override
@@ -108,6 +117,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatHolder>
 
 
 
+
+
          public ChatHolder(@NonNull View itemView) {
 
 
@@ -118,8 +129,11 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatHolder>
              txtMesaj = itemView.findViewById(R.id.chat_item_txtMesaj);
              imgResim = itemView.findViewById(R.id.chat_item_imgResim);
              mProgress = itemView.findViewById(R.id.chat_item_progress);
+
+
          }
      }
+
 
     @Override
     public int getItemViewType(int position) {
