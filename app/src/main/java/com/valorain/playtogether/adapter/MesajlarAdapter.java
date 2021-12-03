@@ -12,6 +12,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,6 +28,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.squareup.picasso.Picasso;
 import com.valorain.playtogether.Fragment.ChatFragment;
+import com.valorain.playtogether.Fragment.deleteChatDialog;
 import com.valorain.playtogether.Model.Chat;
 import com.valorain.playtogether.Model.Kullanici;
 import com.valorain.playtogether.R;
@@ -65,6 +69,20 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.Mesajl
     public void onBindViewHolder(@NonNull MesajlarHolder holder, int position) {
             mUser = FirebaseAuth.getInstance().getCurrentUser();
         mKullanici = mArrayList.get(position);
+
+        holder.imgDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                FragmentActivity activity = (FragmentActivity)(mContext);
+                FragmentManager fm = activity.getSupportFragmentManager();
+                deleteChatDialog deleteChat = new deleteChatDialog();
+                deleteChat.show(fm,"delete");
+
+
+            }
+        });
+
 
         if (!mUser.getUid().equals(mKullanici.getUserID()))
         holder.kullaniciIsmi.setText(mKullanici.getKullaniciAdi());
@@ -111,6 +129,8 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.Mesajl
 
        TextView kullaniciIsmi,sonMesaj;
        CircleImageView kullaniciProfil;
+       ImageView imgDelete;
+
 
 
 
@@ -120,6 +140,7 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.Mesajl
            kullaniciIsmi = itemView.findViewById(R.id.chat_fragment_item_txtKullaniciIsim);
            kullaniciProfil = itemView.findViewById(R.id.chat_fragment_item_imgKullaniciProfil);
            sonMesaj = itemView.findViewById(R.id.chat_fragment_item_txtLastMessage);
+           imgDelete = itemView.findViewById(R.id.chat_fragment_item_imgDelete);
        }
    }
 
