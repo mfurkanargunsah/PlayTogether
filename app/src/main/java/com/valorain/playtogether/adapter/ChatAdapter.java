@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +13,17 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.valorain.playtogether.Fragment.deleteChatDialog;
+import com.valorain.playtogether.Fragment.fullScreenImageFragment;
 import com.valorain.playtogether.Model.Chat;
 import com.valorain.playtogether.R;
+import com.valorain.playtogether.View.FullScreenActivity;
 
 
 import java.util.ArrayList;
@@ -89,9 +95,18 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatHolder>
             holder.imgResim.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent browse = new Intent(Intent.ACTION_VIEW);
-                    browse.setData(Uri.parse(mChatList.get(position).getMesajIcerigi()));
-                    mContext.startActivity(browse);
+                  //  Intent browse = new Intent(Intent.ACTION_VIEW);
+                 //   browse.setData(Uri.parse(mChatList.get(position).getMesajIcerigi()));
+                  //  mContext.startActivity(browse);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("imgSrc", mChatList.get(position).getMesajIcerigi());
+
+                    FragmentActivity activity = (FragmentActivity)(mContext);
+                    FragmentManager fm = activity.getSupportFragmentManager();
+                    fullScreenImageFragment fullImage = new fullScreenImageFragment();
+                    fullImage.setArguments(bundle);
+                    fullImage.show(fm,"fullSc");
+
 
 
                 }

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/spinner_bg"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical">
+
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="400dp">
+
+
+            <ImageView
+                android:id="@+id/fullscreen_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/animegirl" />
+            <ImageView
+                android:id="@+id/close_image_dialog"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_alignRight="@+id/fullscreen_image"
+                android:layout_alignTop="@id/fullscreen_image"
+                android:layout_marginRight="1dp"
+                android:layout_marginTop="1dp"
+                android:src="@drawable/ic_close"
+                android:visibility="visible"
+                app:tint="@color/black" />
+        </RelativeLayout>
+
+
+
+
+        <LinearLayout
+            android:id="@+id/fullscreen_content_controls"
+            style="@style/Widget.Theme.PlayTogether.ButtonBar.Fullscreen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom|center_horizontal"
+            android:orientation="horizontal"
+            android:onClick="btnSaveToGallery"
+            tools:ignore="UselessParent">
+
+            <Button
+                android:id="@+id/dummy_button"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/white"
+                android:text="@string/galeriye_kaydet" />
+
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+</RelativeLayout>

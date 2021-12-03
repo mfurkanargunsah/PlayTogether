@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:textSize="17sp"
             android:layout_toRightOf="@+id/chat_fragment_item_imgKullaniciProfil"
-            android:layout_toLeftOf="@+id/chat_fragment_item_imgSagYon"
+            android:layout_toLeftOf="@+id/chat_fragment_item_imgDelete"
             android:layout_marginRight="5dp"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
@@ -36,7 +36,7 @@
             android:layout_width="wrap_content"
             android:textSize="14sp"
             android:layout_toRightOf="@+id/chat_fragment_item_imgKullaniciProfil"
-            android:layout_toLeftOf="@+id/chat_fragment_item_imgSagYon"
+            android:layout_toLeftOf="@+id/chat_fragment_item_imgDelete"
             android:layout_marginRight="5dp"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="2dp"
@@ -47,13 +47,13 @@
 
 
         <ImageView
+            android:id="@+id/chat_fragment_item_imgDelete"
             android:layout_width="35dp"
-            android:layout_alignParentRight="true"
+            android:layout_height="35dp"
             android:layout_alignParentEnd="true"
-            android:id="@+id/chat_fragment_item_imgSagYon"
+            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_sag_yon"
-            android:layout_height="35dp"/>
+            android:src="@drawable/ic_delete" />
 
 
     </RelativeLayout>

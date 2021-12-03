@@ -57,7 +57,7 @@
            android:layout_alignBottom="@id/profil_fragment_user_img_profil"
            android:layout_marginRight="2dp"
            android:layout_marginBottom="2dp"
-           android:visibility="gone"
+           android:visibility="visible"
            android:src="@drawable/ic_camera" />
 
    </RelativeLayout>
