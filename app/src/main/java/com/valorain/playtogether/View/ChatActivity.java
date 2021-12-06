@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.ProgressDialog;
-import android.content.Context;
+
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -25,7 +25,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -40,7 +40,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.storage.FileDownloadTask;
+
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -51,8 +51,7 @@ import com.valorain.playtogether.R;
 import com.valorain.playtogether.adapter.ChatAdapter;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -96,7 +95,7 @@ public class ChatActivity extends AppCompatActivity {
     private String docId;
     private String mUID;
     private String kanalId;
-
+    private String selectGames;
 
 
     private void init()
@@ -112,6 +111,8 @@ public class ChatActivity extends AppCompatActivity {
         mUser = FirebaseAuth.getInstance().getCurrentUser();
         gelenIntent = getIntent();
         hedefId = gelenIntent.getStringExtra("hedefId");
+        selectGames = gelenIntent.getStringExtra("selectGame");
+        System.out.println(selectGames);
         mUID = mUser.getUid();
 
 
@@ -133,32 +134,30 @@ public class ChatActivity extends AppCompatActivity {
         init();
         hedefRef = mFireStore.collection("Kullanıcılar").document(hedefId);
         System.out.println(hedefId);
-        hedefRef.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+        hedefRef.addSnapshotListener(this, (value, error) -> {
 
-                            mFireStore.collection("Eşleşme Odası").document(hedefId).delete();
+                if (selectGames != null)
+            mFireStore.collection("Eşleşme Odası").document(selectGames).collection("Kullanıcılar").document(mUID).delete();
 
-                    if (error != null)
-                    {
-                        Toast.makeText(ChatActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
-                        return;
-                    }
+            if (error != null)
+            {
+                Toast.makeText(ChatActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-                    if (value != null && value.exists()) {
+            if (value != null && value.exists()) {
 
-                        hedefKullanici = value.toObject(Kullanici.class);
+                hedefKullanici = value.toObject(Kullanici.class);
 
-                        if (hedefKullanici != null){
-                            TargetName.setText(hedefKullanici.getKullaniciAdi());
-                            if (hedefKullanici.getKullaniciProfil().equals("default"))
-                                targetPhoto.setImageResource(R.mipmap.ic_launcher);
-                            else
-                                Picasso.get().load(hedefKullanici.getKullaniciProfil()).into(targetPhoto);
+                if (hedefKullanici != null){
+                    TargetName.setText(hedefKullanici.getKullaniciAdi());
+                    if (hedefKullanici.getKullaniciProfil().equals("default"))
+                        targetPhoto.setImageResource(R.mipmap.ic_launcher);
+                    else
+                        Picasso.get().load(hedefKullanici.getKullaniciProfil()).into(targetPhoto);
 
-                        }
+                }
 
-                    }
             }
         });
 
@@ -173,28 +172,25 @@ public class ChatActivity extends AppCompatActivity {
         //Gönderen
         chatQuery = mFireStore.collection("Sohbet Kanalları").document(hedefId).collection("ChatList").document("Alıcı").collection(mUID)
                 .orderBy("mesajTarihi",Query.Direction.ASCENDING);
-        chatQuery.addSnapshotListener(this, new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                if (error != null){
+        chatQuery.addSnapshotListener(this, (value, error) -> {
+            if (error != null){
 
-                    Toast.makeText(ChatActivity.this, error.getMessage(),Toast.LENGTH_SHORT).show();
-                }
+                Toast.makeText(ChatActivity.this, error.getMessage(),Toast.LENGTH_SHORT).show();
+            }
 
-                if(value != null){
-                         mChatList.clear();
+            if(value != null){
+                mChatList.clear();
 
-                         for (DocumentSnapshot snapshot : value.getDocuments()){
-                             mChat = snapshot.toObject(Chat.class);
-                             assert mChat != null;
-                             mChatList.add(mChat);
-
-                         }
-                    chatAdapter = new ChatAdapter(mChatList,ChatActivity.this,mUID,hedefId,docId);
-                         mRecyclerView.setAdapter(chatAdapter);
-
+                for (DocumentSnapshot snapshot : value.getDocuments()){
+                    mChat = snapshot.toObject(Chat.class);
+                    assert mChat != null;
+                    mChatList.add(mChat);
 
                 }
+                chatAdapter = new ChatAdapter(mChatList,ChatActivity.this,mUID,hedefId,docId);
+                mRecyclerView.setAdapter(chatAdapter);
+
+
             }
         });
     }
@@ -203,60 +199,53 @@ public class ChatActivity extends AppCompatActivity {
 
     public void btnMesajGonder(View view){
 
-            txtMesaj = editMesaj.getText().toString();
-            if (!TextUtils.isEmpty(txtMesaj)){
-               docId = UUID.randomUUID().toString();
+        txtMesaj = editMesaj.getText().toString();
+        if (!TextUtils.isEmpty(txtMesaj)){
+            docId = UUID.randomUUID().toString();
 
-                mData = new HashMap<>();
-                mData.put("mesajIcerigi",txtMesaj);
-                mData.put("gonderen",mUser.getUid());
-                mData.put("alici",hedefId);
-                mData.put("mesajTipi","text");
-                mData.put("mesajTarihi", FieldValue.serverTimestamp());
-                mData.put("docId",docId);
-               // mData.put("userName",hedefKullanici.getUserID());
-                mData.put("imgProfil",hedefKullanici.getKullaniciProfil());
+            mData = new HashMap<>();
+            mData.put("mesajIcerigi",txtMesaj);
+            mData.put("gonderen",mUser.getUid());
+            mData.put("alici",hedefId);
+            mData.put("mesajTipi","text");
+            mData.put("mesajTarihi", FieldValue.serverTimestamp());
+            mData.put("docId",docId);
+            mData.put("imgProfil",hedefKullanici.getKullaniciProfil());
 
 
-                mFireStore.collection("Sohbet Kanalları").document(hedefId).collection("ChatList").document("Alıcı").collection(mUID).document(docId)
-                        .set(mData)
-                        .addOnCompleteListener(ChatActivity.this, new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
+            mFireStore.collection("Sohbet Kanalları").document(hedefId).collection("ChatList").document("Alıcı").collection(mUID).document(docId)
+                    .set(mData)
+                    .addOnCompleteListener(ChatActivity.this, task -> {
 
-                                if (task.isSuccessful()) {
-                                    editMesaj.setText("");
-                                    progressAyar();
-                                }
-                                else
-                                    Toast.makeText(ChatActivity.this,task.getException().getMessage(),Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                        if (task.isSuccessful()) {
+                            editMesaj.setText("");
+                            progressAyar();
+                        }
+                        else
+                            Toast.makeText(ChatActivity.this,task.getException().getMessage(),Toast.LENGTH_SHORT).show();
+                    });
 
-                mFireStore.collection("Sohbet Kanalları").document(mUID).collection("ChatList").document("Alıcı").collection(hedefId).document(docId)
-                        .set(mData)
-                        .addOnCompleteListener(ChatActivity.this, new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
+            mFireStore.collection("Sohbet Kanalları").document(mUID).collection("ChatList").document("Alıcı").collection(hedefId).document(docId)
+                    .set(mData)
+                    .addOnCompleteListener(ChatActivity.this, task -> {
 
-                                if (task.isSuccessful()) {
+                        if (task.isSuccessful()) {
 
-                                    editMesaj.setText("");
-                                    progressAyar();
-                                }
-                                else
-                                    Toast.makeText(ChatActivity.this,task.getException().getMessage(),Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                            editMesaj.setText("");
+                            progressAyar();
+                        }
+                        else
+                            Toast.makeText(ChatActivity.this,task.getException().getMessage(),Toast.LENGTH_SHORT).show();
+                    });
 
-            }else
-                Toast.makeText(ChatActivity.this,"Boş Mesaj Gönderilemez",Toast.LENGTH_SHORT).show();
+        }else
+            Toast.makeText(ChatActivity.this,"Boş Mesaj Gönderilemez",Toast.LENGTH_SHORT).show();
 
 
     }
 
     public void btnChatBack(View view){
-       finish();
+        finish();
 
 
 
@@ -268,7 +257,7 @@ public class ChatActivity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},IZIN_KODU);
         }else
-        galeriIntent();
+            galeriIntent();
     }
 
     private void galeriIntent(){
@@ -290,94 +279,94 @@ public class ChatActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == IZIN_ALINDI_KODU){
             if (resultCode == RESULT_OK && data != null && data.getData() != null){
-                    imgUri = data.getData();
+                imgUri = data.getData();
 
                 try {
-                   if(Build.VERSION.SDK_INT >= 28){
-                       imgSource = ImageDecoder.createSource(this.getContentResolver(),imgUri);
-                       imgBitmap = ImageDecoder.decodeBitmap(imgSource);
-                   }else{
-                       imgBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(),imgUri);
-                   }
-                   outputStream = new ByteArrayOutputStream();
-                   imgBitmap.compress(Bitmap.CompressFormat.JPEG,100,outputStream);
-                   imgByte = outputStream.toByteArray();
+                    if(Build.VERSION.SDK_INT >= 28){
+                        imgSource = ImageDecoder.createSource(this.getContentResolver(),imgUri);
+                        imgBitmap = ImageDecoder.decodeBitmap(imgSource);
+                    }else{
+                        imgBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(),imgUri);
+                    }
+                    outputStream = new ByteArrayOutputStream();
+                    imgBitmap.compress(Bitmap.CompressFormat.JPEG,100,outputStream);
+                    imgByte = outputStream.toByteArray();
 
-                   kayitYeri = "ChatImages/" + mUID + "/" + hedefId + "/" + mUID + System.currentTimeMillis() + ".png";
-                   sRef = mStorageRef.child(kayitYeri);
-                   sRef.putBytes(imgByte)
-                           .addOnSuccessListener(this,new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                               @Override
-                               public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                   mProgress.show();
-                                   yeniRef = FirebaseStorage.getInstance().getReference(kayitYeri);
-                                   yeniRef.getDownloadUrl()
-                                           .addOnSuccessListener(ChatActivity.this, new OnSuccessListener<Uri>() {
-                                               @Override
-                                               public void onSuccess(Uri uri) {
+                    kayitYeri = "ChatImages/" + mUID + "/" + hedefId + "/" + mUID + System.currentTimeMillis() + ".png";
+                    sRef = mStorageRef.child(kayitYeri);
+                    sRef.putBytes(imgByte)
+                            .addOnSuccessListener(this,new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    mProgress.show();
+                                    yeniRef = FirebaseStorage.getInstance().getReference(kayitYeri);
+                                    yeniRef.getDownloadUrl()
+                                            .addOnSuccessListener(ChatActivity.this, new OnSuccessListener<Uri>() {
+                                                @Override
+                                                public void onSuccess(Uri uri) {
                                                     indirmeLinki = uri.toString();
-                                                   docId = UUID.randomUUID().toString();
+                                                    docId = UUID.randomUUID().toString();
 
-                                                   mData = new HashMap<>();
-                                                   mData.put("mesajIcerigi",indirmeLinki);
-                                                   mData.put("gonderen",mUser.getUid());
-                                                   mData.put("alici",hedefId);
-                                                   mData.put("mesajTipi","resim");
-                                                   mData.put("mesajTarihi", FieldValue.serverTimestamp());
-                                                   mData.put("docId",docId);
-                                                   // mData.put("userName",hedefKullanici.getUserID());
-                                                   mData.put("imgProfil",hedefKullanici.getKullaniciProfil());
-
-
-                                                   mFireStore.collection("Sohbet Kanalları").document(hedefId).collection("ChatList").document("Alıcı").collection(mUID).document(docId)
-                                                           .set(mData)
-                                                           .addOnCompleteListener(ChatActivity.this, new OnCompleteListener<Void>() {
-                                                               @Override
-                                                               public void onComplete(@NonNull Task<Void> task) {
-
-                                                                   if (task.isSuccessful()) {
+                                                    mData = new HashMap<>();
+                                                    mData.put("mesajIcerigi",indirmeLinki);
+                                                    mData.put("gonderen",mUser.getUid());
+                                                    mData.put("alici",hedefId);
+                                                    mData.put("mesajTipi","resim");
+                                                    mData.put("mesajTarihi", FieldValue.serverTimestamp());
+                                                    mData.put("docId",docId);
+                                                    // mData.put("userName",hedefKullanici.getUserID());
+                                                    mData.put("imgProfil",hedefKullanici.getKullaniciProfil());
 
 
-                                                                       editMesaj.setText("");
-                                                                       progressAyar();
-                                                                   }
-                                                                   else
-                                                                       Toast.makeText(ChatActivity.this,task.getException().getMessage(),Toast.LENGTH_SHORT).show();
-                                                               }
-                                                           });
-                                                   mFireStore.collection("Sohbet Kanalları").document(mUID).collection("ChatList").document("Alıcı").collection(hedefId).document(docId)
-                                                           .set(mData)
-                                                           .addOnCompleteListener(ChatActivity.this, new OnCompleteListener<Void>() {
-                                                               @Override
-                                                               public void onComplete(@NonNull Task<Void> task) {
+                                                    mFireStore.collection("Sohbet Kanalları").document(hedefId).collection("ChatList").document("Alıcı").collection(mUID).document(docId)
+                                                            .set(mData)
+                                                            .addOnCompleteListener(ChatActivity.this, new OnCompleteListener<Void>() {
+                                                                @Override
+                                                                public void onComplete(@NonNull Task<Void> task) {
 
-                                                                   if (task.isSuccessful()) {
-                                                                       editMesaj.setText("");
-                                                                       progressAyar();
-                                                                   }
-                                                                   else
-                                                                       Toast.makeText(ChatActivity.this,task.getException().getMessage(),Toast.LENGTH_SHORT).show();
-                                                               }
-                                                           });
-
-                                               }
-                                           }).addOnFailureListener(ChatActivity.this, new OnFailureListener() {
-                                       @Override
-                                       public void onFailure(@NonNull Exception e) {
-                                      e.printStackTrace();
-                                           progressAyar();
-                                       }
-                                   });
+                                                                    if (task.isSuccessful()) {
 
 
-                               }
-                           }).addOnFailureListener(this, new OnFailureListener() {
-                       @Override
-                       public void onFailure(@NonNull Exception e) {
-                           e.printStackTrace();
-                           progressAyar();
-                       }
-                   });
+                                                                        editMesaj.setText("");
+                                                                        progressAyar();
+                                                                    }
+                                                                    else
+                                                                        Toast.makeText(ChatActivity.this,task.getException().getMessage(),Toast.LENGTH_SHORT).show();
+                                                                }
+                                                            });
+                                                    mFireStore.collection("Sohbet Kanalları").document(mUID).collection("ChatList").document("Alıcı").collection(hedefId).document(docId)
+                                                            .set(mData)
+                                                            .addOnCompleteListener(ChatActivity.this, new OnCompleteListener<Void>() {
+                                                                @Override
+                                                                public void onComplete(@NonNull Task<Void> task) {
+
+                                                                    if (task.isSuccessful()) {
+                                                                        editMesaj.setText("");
+                                                                        progressAyar();
+                                                                    }
+                                                                    else
+                                                                        Toast.makeText(ChatActivity.this,task.getException().getMessage(),Toast.LENGTH_SHORT).show();
+                                                                }
+                                                            });
+
+                                                }
+                                            }).addOnFailureListener(ChatActivity.this, new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            e.printStackTrace();
+                                            progressAyar();
+                                        }
+                                    });
+
+
+                                }
+                            }).addOnFailureListener(this, new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            e.printStackTrace();
+                            progressAyar();
+                        }
+                    });
 
 
                 } catch (IOException e) {

@@ -10,23 +10,18 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.google.firebase.messaging.FirebaseMessaging;
+
 import com.onesignal.OneSignal;
 
-import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
+
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
+
 import android.widget.TextView;
-import android.widget.Toast;
+
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -45,7 +40,7 @@ import com.valorain.playtogether.Fragment.SettingsFragment;
 import com.valorain.playtogether.Model.Kullanici;
 import com.valorain.playtogether.R;
 
-import java.util.ArrayList;
+
 import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -155,34 +150,31 @@ public class MainActivity extends AppCompatActivity {
                 status = hView.findViewById(R.id.showStatus);
                 mFireStore = FirebaseFirestore.getInstance();
                 mRef = mFireStore.collection("Kullanıcılar").document(mUser.getUid());
-                mRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                        if (error != null) {
+                mRef.addSnapshotListener((value, error) -> {
+                    if (error != null) {
 
-                            return;
-                        }
-                        if (value != null && value.exists()) {
-
-                            user = value.toObject(Kullanici.class);
-
-                            if (user != null) {
-                                status.setText(user.getStatus());
-                                if (user.getKullaniciProfil().equals("default")) {
-                                    userPic.setImageResource(R.mipmap.ic_launcher);
-                                } else {
-                                    Picasso.get().load(user.getKullaniciProfil()).into(userPic);
-                                }
-
-                                if (user.isPremium() == true)
-                                    buyPremium.setVisibility(View.GONE);
-                                else
-                                    buyPremium.setVisibility(View.VISIBLE);
-
-                            }
-                        }
-
+                        return;
                     }
+                    if (value != null && value.exists()) {
+
+                        user = value.toObject(Kullanici.class);
+
+                        if (user != null) {
+                            status.setText(user.getStatus());
+                            if (user.getKullaniciProfil().equals("default")) {
+                                userPic.setImageResource(R.mipmap.ic_launcher);
+                            } else {
+                                Picasso.get().load(user.getKullaniciProfil()).into(userPic);
+                            }
+
+                            if (user.isPremium())
+                                buyPremium.setVisibility(View.GONE);
+                            else
+                                buyPremium.setVisibility(View.VISIBLE);
+
+                        }
+                    }
+
                 });
             }
 
@@ -192,51 +184,48 @@ public class MainActivity extends AppCompatActivity {
 
 
         //menu seçenekler
-        mNav.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        mNav.setNavigationItemSelectedListener(item -> {
 
 
-                switch (item.getItemId()){
-                    case R.id.nav_menu_home:
+            switch (item.getItemId()){
+                case R.id.nav_menu_home:
 
-                        setHomeFragment(homeFragment);
-                        mToolbar.setTitle("PlayTogether");
-                        mDrawer.closeDrawer(GravityCompat.START);
-                        return true;
+                    setHomeFragment(homeFragment);
+                    mToolbar.setTitle("PlayTogether");
+                    mDrawer.closeDrawer(GravityCompat.START);
+                    return true;
 
-                    case R.id.nav_menu_profile:
-                        setHomeFragment(profileFragment);
-                        mToolbar.setTitle("Profil");
-                        mDrawer.closeDrawer(GravityCompat.START);
-                        return true;
+                case R.id.nav_menu_profile:
+                    setHomeFragment(profileFragment);
+                    mToolbar.setTitle("Profil");
+                    mDrawer.closeDrawer(GravityCompat.START);
+                    return true;
 
-                        case R.id.nav_menu_chat:
+                    case R.id.nav_menu_chat:
 
-                        setHomeFragment(chatFragment);
-                        mToolbar.setTitle("Sohbetler");
-                        mDrawer.closeDrawer(GravityCompat.START);
-                        return true;
+                    setHomeFragment(chatFragment);
+                    mToolbar.setTitle("Sohbetler");
+                    mDrawer.closeDrawer(GravityCompat.START);
+                    return true;
 
-                    case R.id.nav_menu_settings:
+                case R.id.nav_menu_settings:
 
-                        setHomeFragment(settingsFragment);
-                        mToolbar.setTitle("Ayarlar");
-                        mDrawer.closeDrawer(GravityCompat.START);
-                        return true;
+                    setHomeFragment(settingsFragment);
+                    mToolbar.setTitle("Ayarlar");
+                    mDrawer.closeDrawer(GravityCompat.START);
+                    return true;
 
-                    case R.id.nav_menu_exit:
-                        mDrawer.closeDrawer(GravityCompat.START);
-                        kullaniciSetOnline(false);
-                        mAuth.signOut();
-                        startActivity(new Intent(MainActivity.this,LoginActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-                        finish();
+                case R.id.nav_menu_exit:
+                    mDrawer.closeDrawer(GravityCompat.START);
+                    kullaniciSetOnline(false);
+                    mAuth.signOut();
+                    startActivity(new Intent(MainActivity.this,LoginActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                    finish();
 
-                        return true;
-                }
-
-                return false;
+                    return true;
             }
+
+            return false;
         });
 
 
@@ -278,17 +267,5 @@ public class MainActivity extends AppCompatActivity {
         kullaniciSetOnline(false);
 
     }
-
-
-
-    ///////////
-
-  ///  @Override
- //   public void onBackPressed() {
-    //    if(mDrawer.isDrawerOpen(GravityCompat.START))
-       //     mDrawer.closeDrawer(GravityCompat.START);
-
-  //   }
-
 
 }
