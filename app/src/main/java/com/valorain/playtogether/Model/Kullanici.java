@@ -2,11 +2,11 @@ package com.valorain.playtogether.Model;
 
 public class Kullanici {
 
-    private String kullaniciAdi,kullaniciEmail,userID,cins,Status,kullaniciProfil;
+    private String kullaniciAdi,kullaniciEmail,userID,cins,Status,kullaniciProfil,arananCins;
     boolean premium,useronline;
 
 
-    public Kullanici(String kullaniciAdi, String kullaniciEmail, String userID,String cins,String Status, boolean premium,boolean useronline,String kullaniciProfil) {
+    public Kullanici(String kullaniciAdi, String kullaniciEmail, String userID,String cins,String Status, boolean premium,boolean useronline,String kullaniciProfil,String arananCins) {
         this.kullaniciAdi = kullaniciAdi;
         this.kullaniciEmail = kullaniciEmail;
         this.userID = userID;
@@ -84,5 +84,13 @@ public class Kullanici {
 
     public void setKullaniciProfil(String kullaniciProfil) {
         this.kullaniciProfil = kullaniciProfil;
+    }
+
+    public String getArananCins() {
+        return arananCins;
+    }
+
+    public void setArananCins(String arananCins) {
+        this.arananCins = arananCins;
     }
 }

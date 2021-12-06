@@ -1,23 +1,20 @@
 package com.valorain.playtogether.View;
 
-import androidx.annotation.NonNull;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.View;
+
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
+
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -40,7 +37,7 @@ public class RegisterActivity extends AppCompatActivity {
     private RadioButton radioK;
     private String gender;
 
-    private void init(){
+    private void init() {
 
         mAuth = FirebaseAuth.getInstance();
         mFirestore = FirebaseFirestore.getInstance();
@@ -63,113 +60,90 @@ public class RegisterActivity extends AppCompatActivity {
 
         //Cinsiyet Kodu
 
-        radioE.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b)
-                    gender = "erkek";
+        radioE.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (b)
+                gender = "erkek";
 
-            }
         });
         //Kadın ise
-        radioK.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b)
-                    gender = "kadın";
+        radioK.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (b)
+                gender = "kadın";
 
-            }
         });
 
         //CheckBox Seçili mi Değil mi?
-        btnCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b) {
-                    btnCreate.setEnabled(true);
-                }else
-                    btnCreate.setEnabled(false);
-            }
+        btnCheck.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (b) {
+                btnCreate.setEnabled(true);
+            } else
+                btnCreate.setEnabled(false);
         });
 
-                // Kayıt Ol butonu fonksiyonu
-        btnCreate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                txtUsername = edtUsername.getText().toString();
-                txtEmail = edtEmail.getText().toString();
-                txtPassword = edtPassword.getText().toString();
+        // Kayıt Ol butonu fonksiyonu
+        btnCreate.setOnClickListener(view -> {
+            txtUsername = edtUsername.getText().toString();
+            txtEmail = edtEmail.getText().toString();
+            txtPassword = edtPassword.getText().toString();
 
 
+            if (!TextUtils.isEmpty(txtUsername)) {
+                if (!TextUtils.isEmpty(txtEmail)) {
+                    if (!TextUtils.isEmpty(txtPassword)) {
+                        //Bilgiler Doğru İse
 
-                if(!TextUtils.isEmpty(txtUsername)){
-                    if (!TextUtils.isEmpty(txtEmail)){
-                        if (!TextUtils.isEmpty(txtPassword)){
-                                //Bilgiler Doğru İse
-
-                            mAuth.createUserWithEmailAndPassword(txtEmail,txtPassword).addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    if(task.isSuccessful()){
-                                                    //startprogress
-                                        mProgress = new ProgressDialog(RegisterActivity.this);
-                                        mProgress.setTitle("Kayıt Olunuyor...");
-                                        mProgress.show();
-                                                    //endprogress
-                                        mUser = mAuth.getCurrentUser();
-                                        String Status = "Free";
+                        mAuth.createUserWithEmailAndPassword(txtEmail, txtPassword).addOnCompleteListener(RegisterActivity.this, task -> {
+                            if (task.isSuccessful()) {
+                                //startprogress
+                                mProgress = new ProgressDialog(RegisterActivity.this);
+                                mProgress.setTitle("Kayıt Olunuyor...");
+                                mProgress.show();
+                                //endprogress
+                                mUser = mAuth.getCurrentUser();
+                                String Status = "Free";
 
 
-
-
-                                            if (mUser != null){
-                                                mKullanici = new Kullanici(txtUsername,txtEmail,mUser.getUid(),gender,Status,false,false,"default");
-                                                mFirestore.collection("Kullanıcılar").document(mUser.getUid())
-                                                        .set(mKullanici)
-                                                        .addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<Void>() {
-                                                            @Override
-                                                            public void onComplete(@NonNull Task<Void> task) {
-                                                           if(task.isSuccessful()){
-                                                               progressAyar();
-                                                               Toast.makeText(RegisterActivity.this, "Kayıt Başarılı", Toast.LENGTH_SHORT).show();
-                                                               finish();
-                                                               startActivity(new Intent(RegisterActivity.this,MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-                                                           }else {
-                                                               progressAyar();
-                                                               Toast.makeText(RegisterActivity.this, "Bir Hata Oluştu Error Code:101", Toast.LENGTH_SHORT).show();
-                                                           }}
-                                                        });
-                                            }
-
-                                    }else {
-                                        progressAyar();
-                                        Toast.makeText(RegisterActivity.this, "Bu email adresi kullanılıyor", Toast.LENGTH_SHORT).show();
-                                    }
+                                if (mUser != null) {
+                                    mKullanici = new Kullanici(txtUsername, txtEmail, mUser.getUid(), gender, Status, false, false, "default", "random");
+                                    mFirestore.collection("Kullanıcılar").document(mUser.getUid())
+                                            .set(mKullanici)
+                                            .addOnCompleteListener(RegisterActivity.this, task1 -> {
+                                                if (task1.isSuccessful()) {
+                                                    progressAyar();
+                                                    Toast.makeText(RegisterActivity.this, "Kayıt Başarılı", Toast.LENGTH_SHORT).show();
+                                                    finish();
+                                                    startActivity(new Intent(RegisterActivity.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                                                } else {
+                                                    progressAyar();
+                                                    Toast.makeText(RegisterActivity.this, "Bir Hata Oluştu Error Code:101", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
                                 }
-                            });
 
-                        }else
-                            Toast.makeText(RegisterActivity.this, "Şifre alanı boş bırakılamaz.", Toast.LENGTH_SHORT).show();
-                    }else
-                        Toast.makeText(RegisterActivity.this, "Email alanı boş bırakılamaz.", Toast.LENGTH_SHORT).show();
-                }else
-                    Toast.makeText(RegisterActivity.this, "Kullanıcı Adı alanı boş bırakılamaz.", Toast.LENGTH_SHORT).show();
+                            } else {
+                                progressAyar();
+                                Toast.makeText(RegisterActivity.this, "Bu email adresi kullanılıyor", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                    } else
+                        Toast.makeText(RegisterActivity.this, "Şifre alanı boş bırakılamaz.", Toast.LENGTH_SHORT).show();
+                } else
+                    Toast.makeText(RegisterActivity.this, "Email alanı boş bırakılamaz.", Toast.LENGTH_SHORT).show();
+            } else
+                Toast.makeText(RegisterActivity.this, "Kullanıcı Adı alanı boş bırakılamaz.", Toast.LENGTH_SHORT).show();
 
 
-
-            }
         });
-
 
 
     }
 
-    private void progressAyar(){
+    private void progressAyar() {
 
-        if(mProgress.isShowing())
+        if (mProgress.isShowing())
             mProgress.dismiss();
     }
-
 
 
 }
