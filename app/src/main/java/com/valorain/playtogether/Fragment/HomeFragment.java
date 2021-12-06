@@ -3,7 +3,7 @@ package com.valorain.playtogether.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
+
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
@@ -14,47 +14,46 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 
-import com.google.firebase.firestore.QuerySnapshot;
-import com.valorain.playtogether.Model.Chat;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.valorain.playtogether.Model.Kullanici;
 import com.valorain.playtogether.R;
 import com.valorain.playtogether.View.ChatActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Random;
+
 import java.util.UUID;
 
 
 public class HomeFragment extends Fragment {
-
+    private View view;
     private Kullanici user;
-    private FirebaseAuth mAuth;
     private FirebaseUser mUser;
     private FirebaseFirestore mStore;
     private DocumentReference mRef;
     private Kullanici mKullanici;
-    private Button btnStart;
     private ArrayList<String> mKullaniciList;
-    private String mUID;
-
-    private HashMap<String,Object> mData;
+    private HashMap<String, Object> mData;
     private Intent chatIntent;
-    private String channelId;
+    private String channelId, selectedGame = null, selectGender = "Random";
+    private final Bundle bundle = new Bundle();
+    private TextView showError;
+    private DialogFragment mDialogFragment;
 
+    //spinners
+    private Spinner gameSelect;
+    private Spinner genderSelect;
+    private Spinner nonPre;
 
 
     @Nullable
@@ -62,181 +61,56 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        view = inflater.inflate(R.layout.fragment_home, container, false);
 
         //dialog tanım
-        btnStart = view.findViewById(R.id.startMatch);
-
-
+        Button btnStart = view.findViewById(R.id.startMatch);
+        genderSelect = view.findViewById(R.id.spinner_gender);
+        gameSelect = view.findViewById(R.id.spinner_game_list);
+        showError = view.findViewById(R.id.genderPremiumError);
         //firebase tanım
-        mAuth = FirebaseAuth.getInstance();
         mUser = FirebaseAuth.getInstance().getCurrentUser();
         mStore = FirebaseFirestore.getInstance();
         mRef = mStore.collection("Kullanıcılar").document(mUser.getUid());
 
 
         //Game Select Menu
-        Spinner gameSelect = view.findViewById(R.id.spinner_game_list);
-        ArrayAdapter<CharSequence> adapterGame;
-        adapterGame = ArrayAdapter.createFromResource(getContext(), R.array.game_list, R.layout.color_spinner_layout);
-        adapterGame.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        gameSelect.setAdapter(adapterGame);
+        gameSelectMethod();
 
-        gameSelect.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
-
-                if (i == 0) {
-
-                }
-                if (i == 1) {
-
-                }
-                if (i == 2) {
-
-                }
-                if (i == 3) {
-
-                }
-                if (i == 4) {
-
-                }
-                if (i == 5) {
-
-                }
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-
-            }
-        });
 
         //Gender Select Menu
-        Spinner genderSelect = view.findViewById(R.id.spinner_gender);
-        ArrayAdapter<CharSequence> adapterGender;
-        adapterGender = ArrayAdapter.createFromResource(getContext(), R.array.gender_list, R.layout.color_spinner_layout);
-        adapterGender.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        genderSelect.setAdapter(adapterGender);
-
-        genderSelect.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterGender, View view, int i, long l) {
+        genderSelectMethod();
 
 
-                if (i == 0) {
-
-                }
-                if (i == 1) {
-
-                }
-                if (i == 2) {
-
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
+        //Free / Premium Kontrolü
+        isFreeOrPremium();
 
 
-            }
-        });
+        //kullanıcı listesi çekme
+        mKullaniciList = new ArrayList<>();
+        if (!(mUser == null)) {
+            btnStart.setOnClickListener(view -> {
 
-        //nonpremium spinner
-        Spinner nonPre = view.findViewById(R.id.spinner_no_premium);
-        ArrayAdapter<CharSequence> adapterNP;
-        adapterNP = ArrayAdapter.createFromResource(getContext(), R.array.non_premium, R.layout.color_spinner_layout);
-        nonPre.setAdapter(adapterNP);
-
-        ///
-        mRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-
-                if (error != null) {
-                    return;
-                }
-
-                if (value != null && value.exists()) {
-                    user = value.toObject(Kullanici.class);
-
-                    if (user != null) {
-                        System.out.println(user.getStatus());
-                        System.out.println(user.isPremium());
-                        TextView showError = view.findViewById(R.id.genderPremiumError);
-                        if (user.isPremium() == false) {
+                //dialog penceresini aç
+                openDialogWindow();
 
 
-                            showError.setVisibility(View.VISIBLE);
-                            mRef.update("status", "Free");
-                            nonPre.setVisibility(View.VISIBLE);
-                            genderSelect.setVisibility(View.GONE);
-                        } else if (user.isPremium() == true) {
-                            showError.setVisibility(View.GONE);
-                            mRef.update("status", "Premium");
-                            nonPre.setVisibility(View.GONE);
-                            genderSelect.setVisibility(View.VISIBLE);
-
-
-                        }
-
+                new CountDownTimer(5000, 1000) {
+                    @Override
+                    public void onTick(long l) {
 
                     }
-                }
+
+                    @Override
+                    public void onFinish() {
+
+                        //Eşleşme Odası Oluştur
+                        createMatchingRoom();
 
 
-            }
-        });
-
-
-        mKullaniciList = new ArrayList<String>();
-        //kullanıcı listesi çekme
-
-
-        if (!(mUser == null)) {
-            btnStart.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-
-
-                    //dialog penceresini aç
-                    DialogFragment mDialogFragment = new DialogFragment();
-                    mDialogFragment.show(getChildFragmentManager(), "mDialogFragment");
-
-
-
-                    new CountDownTimer(5000, 1000) {
-                        @Override
-                        public void onTick(long l) {
-
-                        }
-
-                        @Override
-                        public void onFinish() {
-
-
-
-
-                            mData = new HashMap<>();
-                            mData.put("cins",user.getCins());
-                            mData.put("kullaniciAdi",user.getKullaniciAdi());
-                            mData.put("kullaniciProfil",user.getKullaniciProfil());
-                            mData.put("userID",user.getUserID());
-                            mStore.collection("Eşleşme Odası").document(mUser.getUid()).set(mData);
-
-
-
-
-                    //veri getir
-                    mStore.collection("Eşleşme Odası")
-                            .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                                @Override
-                                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-
+                        //veri getir
+                        mStore.collection("Eşleşme Odası").document(selectedGame).collection("Kullanıcılar")
+                                .addSnapshotListener((value, error) -> {
 
 
                                     if (value != null) {
@@ -246,65 +120,40 @@ public class HomeFragment extends Fragment {
                                             mKullanici = snapshot.toObject(Kullanici.class);
                                             if (mKullanici != null) {
 
-                                                mKullaniciList.add(mKullanici.getUserID().toString());
+                                                mKullaniciList.add(mKullanici.getUserID());
+                                                // for random  28-33 // for erkek ve kadın  28-32
 
                                             }
                                         }
-                                        if (mKullaniciList.size() < 2){
+                                        if (mKullaniciList.size() < 2) {
                                             return;
                                         }
-                                        if (mUser.getUid().equals(mKullaniciList.get(0))) {
-                                            mStore.collection("ChatRoom").document(mKullaniciList.get(1)).collection("Kanallar").document(mUser.getUid()).set(mData)
-                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                        @Override
-                                                        public void onComplete(@NonNull Task<Void> task) {
-                                                            chatIntent = new Intent(view.getContext(), ChatActivity.class);
-
-                                                            channelId = UUID.randomUUID().toString();
-                                                            chatIntent.putExtra("channelId",channelId);
-                                                            chatIntent.putExtra("hedefId", mKullaniciList.get(1));
 
 
-                                                            mDialogFragment.dismiss();
+                                            //Random Eşleşme İçin
+                                            //Kullanıcı 0 için Sohbet Odası Oluştur
+                                            if (mUser.getUid().equals(mKullaniciList.get(0))) {
 
+                                                createChatRoom0();
+                                                mDialogFragment.dismiss();
 
+                                            }
 
-                                                            chatIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                                            startActivity(chatIntent);
+                                            //Kullanıcı 1 için Sohbet Odası Oluştur
+                                            if (mUser.getUid().equals(mKullaniciList.get(1))) {
 
-                                                        }
-                                                    });
-                                        }
-                                         if(mUser.getUid().equals(mKullaniciList.get(1))){
-                                            mStore.collection("ChatRoom").document(mKullaniciList.get(0)).collection("Kanallar").document(mUser.getUid()).set(mData)
-                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                        @Override
-                                                        public void onComplete(@NonNull Task<Void> task) {
-                                                            chatIntent = new Intent(view.getContext(), ChatActivity.class);
-                                                            channelId = UUID.randomUUID().toString();
-                                                            chatIntent.putExtra("channelId",channelId);
-                                                            chatIntent.putExtra("hedefId", mKullaniciList.get(0));
-                                                            mDialogFragment.dismiss();
+                                                createChatRoom1();
+                                                mDialogFragment.dismiss();
 
-
-                                                            chatIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                                            startActivity(chatIntent);
-
-                                                        }
-                                                    });
-
-                                        }
-
-
-
+                                            }
 
 
                                     }
-                                }
-                            });
-                        }
-                    }.start();
-                }
+
+
+                                });
+                    }
+                }.start();
             });
         }
 
@@ -312,6 +161,177 @@ public class HomeFragment extends Fragment {
         return view;
 
 
+    }
+
+    private void createChatRoom1() {
+        mStore.collection("ChatRoom").document(mKullaniciList.get(0)).collection("Kanallar").document(mUser.getUid()).set(mData)
+                .addOnCompleteListener(task -> {
+                    chatIntent = new Intent(view.getContext(), ChatActivity.class);
+                    channelId = UUID.randomUUID().toString();
+                    chatIntent.putExtra("channelId", channelId);
+                    chatIntent.putExtra("hedefId", mKullaniciList.get(0));
+                    chatIntent.putExtra("selectGame", selectedGame);
+                    chatIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(chatIntent);
+
+                });
+    }
+
+    private void createChatRoom0() {
+
+        mStore.collection("ChatRoom").document(mKullaniciList.get(1)).collection("Kanallar").document(mUser.getUid()).set(mData)
+                .addOnCompleteListener(task -> {
+                    chatIntent = new Intent(view.getContext(), ChatActivity.class);
+
+                    channelId = UUID.randomUUID().toString();
+                    chatIntent.putExtra("channelId", channelId);
+                    chatIntent.putExtra("hedefId", mKullaniciList.get(1));
+                    chatIntent.putExtra("selectGame", selectedGame);
+                    chatIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(chatIntent);
+
+                });
+
+    }
+
+    private void createMatchingRoom() {
+        mData = new HashMap<>();
+        mData.put("cins", user.getCins());
+        mData.put("kullaniciAdi", user.getKullaniciAdi());
+        mData.put("kullaniciProfil", user.getKullaniciProfil());
+        mData.put("userID", user.getUserID());
+        mData.put("arananCins",user.getArananCins());
+        mStore.collection("Eşleşme Odası").document(selectedGame).collection("Kullanıcılar").document(mUser.getUid()).set(mData);
+    }
+
+    private void openDialogWindow() {
+        bundle.putString("SelectGame", selectedGame);
+        mDialogFragment = new DialogFragment();
+        mDialogFragment.setArguments(bundle);
+        mDialogFragment.show(getChildFragmentManager(), "mDialogFragment");
+    }
+
+    private void isFreeOrPremium() {
+
+        nonPre = view.findViewById(R.id.spinner_no_premium);
+        ArrayAdapter<CharSequence> adapterNP = ArrayAdapter.createFromResource(getContext(), R.array.non_premium, R.layout.color_spinner_layout);
+        nonPre.setAdapter(adapterNP);
+        nonPre.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                selectGender = "random";
+                user.setArananCins("random");
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                selectGender =  "random";
+                user.setArananCins("random");
+            }
+        });
+        ///devamı
+        mRef.addSnapshotListener((value, error) -> {
+
+            if (error != null) {
+                return;
+            }
+
+            if (value != null && value.exists()) {
+                user = value.toObject(Kullanici.class);
+
+                if (user != null) {
+
+                    if (!user.isPremium()) {
+                        showError.setVisibility(View.VISIBLE);
+                        mRef.update("status", "Free");
+                        nonPre.setVisibility(View.VISIBLE);
+                        genderSelect.setVisibility(View.GONE);
+                    } else if (user.isPremium()) {
+                        showError.setVisibility(View.GONE);
+                        mRef.update("status", "Premium");
+                        nonPre.setVisibility(View.GONE);
+                        genderSelect.setVisibility(View.VISIBLE);
+
+                    }
+
+
+                }
+            }
+
+
+        });
+    }
+
+    private void genderSelectMethod() {
+        ArrayAdapter<CharSequence> adapterGender = ArrayAdapter.createFromResource(getContext(), R.array.gender_list, R.layout.color_spinner_layout);
+        adapterGender.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        genderSelect.setAdapter(adapterGender);
+        genderSelect.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterGender, View view, int i, long l) {
+
+
+                if (i == 0) {
+                    selectGender = "random";
+                    user.setArananCins("random");
+                }
+                if (i == 1) {
+
+                    selectGender = "erkek";
+                    user.setArananCins("erkek");
+                }
+                if (i == 2) {
+                    selectGender = "kadın";
+                    user.setArananCins("kadın");
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                selectGender = "random";
+                user.setArananCins("random");
+
+            }
+        });
+    }
+
+    private void gameSelectMethod() {
+        //adapters
+        ArrayAdapter<CharSequence> adapterGame = ArrayAdapter.createFromResource(getContext(), R.array.game_list, R.layout.color_spinner_layout);
+        adapterGame.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        gameSelect.setAdapter(adapterGame);
+        gameSelect.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+
+                if (i == 0) {
+                    selectedGame = "Farketmez";
+                }
+                if (i == 1) {
+                    selectedGame = "LeaugeOfLegends";
+                }
+                if (i == 2) {
+                    selectedGame = "Valorant";
+                }
+                if (i == 3) {
+                    selectedGame = "CSGO";
+                }
+                if (i == 4) {
+                    selectedGame = "Pubg";
+                }
+                if (i == 5) {
+                    selectedGame = "Dota2";
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+                selectedGame = "Farketmez";
+
+            }
+        });
     }
 
 }

@@ -9,6 +9,7 @@
     <LinearLayout
         android:layout_width="300dp"
         android:layout_height="400dp"
+        android:id="@+id/dialog_fragment_background"
         android:background="@drawable/alert_dialog_bg"
         android:orientation="vertical">
 
@@ -67,6 +68,7 @@
                         android:text="İptal"
                         android:textStyle="bold"
                         android:layout_gravity="center_horizontal" />
+
                 </LinearLayout>
 
             </LinearLayout>
