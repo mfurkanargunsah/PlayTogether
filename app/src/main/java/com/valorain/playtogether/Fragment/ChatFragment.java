@@ -50,25 +50,25 @@ public class ChatFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-       v = inflater.inflate(R.layout.fragment_chat, container, false);
+        v = inflater.inflate(R.layout.fragment_chat, container, false);
 
-       mFireStore = FirebaseFirestore.getInstance();
-       mUser = FirebaseAuth.getInstance().getCurrentUser();
-       mArrayList = new ArrayList<Kullanici>();
+        mFireStore = FirebaseFirestore.getInstance();
+        mUser = FirebaseAuth.getInstance().getCurrentUser();
+        mArrayList = new ArrayList<Kullanici>();
 
-       mRecyclerView = v.findViewById(R.id.chat_fragment_recyclerView);
-       mRecyclerView.setHasFixedSize(true);
-       mRecyclerView.setLayoutManager(new LinearLayoutManager(v.getContext(),LinearLayoutManager.VERTICAL,false));
+        mRecyclerView = v.findViewById(R.id.chat_fragment_recyclerView);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(v.getContext(),LinearLayoutManager.VERTICAL,false));
 
 
-       mQuery = mFireStore.collection("ChatRoom").document(mUser.getUid()).collection("Kanallar");
-       mQuery.addSnapshotListener(new EventListener<QuerySnapshot>() {
-           @Override
-           public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-          if (error != null){
-              Toast.makeText(v.getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
-              return;
-          }
+        mQuery = mFireStore.collection("ChatRoom").document(mUser.getUid()).collection("Kanallar");
+        mQuery.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (error != null){
+                    Toast.makeText(v.getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 if (value != null){
 
                     mArrayList.clear();
@@ -91,9 +91,9 @@ public class ChatFragment extends Fragment {
 
 
                 }
-               
-           }
-       });
+
+            }
+        });
 
 
 
@@ -101,6 +101,6 @@ public class ChatFragment extends Fragment {
 
 
 
-            return  v;
+        return  v;
     }
 }

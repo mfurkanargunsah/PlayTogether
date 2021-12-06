@@ -2,6 +2,7 @@ package com.valorain.playtogether.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.ContentInfo;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,6 +50,8 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.Mesajl
     private FirebaseFirestore mStore;
     private FirebaseUser mUser;
     private Intent chatIntent;
+    private String hedefID;
+
 
 
     public MesajlarAdapter(ArrayList<Kullanici> mArrayList, Context mContext) {
@@ -74,10 +77,21 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.Mesajl
             @Override
             public void onClick(View view) {
 
-                FragmentActivity activity = (FragmentActivity)(mContext);
-                FragmentManager fm = activity.getSupportFragmentManager();
-                deleteChatDialog deleteChat = new deleteChatDialog();
-                deleteChat.show(fm,"delete");
+               kPos = holder.getAdapterPosition();
+
+                if (kPos != RecyclerView.NO_POSITION){
+
+                    FragmentActivity activity = (FragmentActivity)(mContext);
+                    FragmentManager fm = activity.getSupportFragmentManager();
+                    deleteChatDialog deleteChat;
+                    deleteChat = new deleteChatDialog();
+                    deleteChat.show(fm,"delete");
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString("hedefID",mArrayList.get(kPos).getUserID());
+                    deleteChat.setArguments(bundle);
+
+                }
 
 
             }
@@ -99,6 +113,7 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.Mesajl
 
                 kPos = holder.getAdapterPosition();
 
+
                 if (kPos != RecyclerView.NO_POSITION){
 
 
@@ -108,11 +123,8 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.Mesajl
                     chatIntent.putExtra("hedefId",mArrayList.get(kPos).getUserID());
                     chatIntent.putExtra("alici",mArrayList.get(kPos).getKullaniciAdi());
                     chatIntent.putExtra("imgProfil",mArrayList.get(kPos).getKullaniciProfil());
-
-
                     chatIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     mContext.startActivity(chatIntent);
-
 
                 }
 
