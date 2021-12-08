@@ -3,10 +3,11 @@ package com.valorain.playtogether.Model;
 public class Kullanici {
 
     private String kullaniciAdi,kullaniciEmail,userID,cins,Status,kullaniciProfil,arananCins;
+    private int userCoin, userGidenCoin,userGelenCoin;
     boolean premium,useronline;
 
 
-    public Kullanici(String kullaniciAdi, String kullaniciEmail, String userID,String cins,String Status, boolean premium,boolean useronline,String kullaniciProfil,String arananCins) {
+    public Kullanici(String kullaniciAdi, String kullaniciEmail, String userID,String cins,String Status, boolean premium,boolean useronline,String kullaniciProfil,String arananCins,int userCoin,int userGidenCoin,int userGelenCoin) {
         this.kullaniciAdi = kullaniciAdi;
         this.kullaniciEmail = kullaniciEmail;
         this.userID = userID;
@@ -15,6 +16,10 @@ public class Kullanici {
         this.premium = premium;
         this.useronline = useronline;
         this.kullaniciProfil = kullaniciProfil;
+        this.arananCins = arananCins;
+        this.userCoin = userCoin;
+        this.userGidenCoin =  userGidenCoin;
+        this.userGelenCoin = userGelenCoin;
 
 
     }
@@ -92,5 +97,29 @@ public class Kullanici {
 
     public void setArananCins(String arananCins) {
         this.arananCins = arananCins;
+    }
+
+    public int getUserCoin() {
+        return userCoin;
+    }
+
+    public void setUserCoin(int userCoin) {
+        this.userCoin = userCoin;
+    }
+
+    public int getUserGidenCoin() {
+        return userGidenCoin;
+    }
+
+    public void setUserGidenCoin(int userGidenCoin) {
+        this.userGidenCoin = userGidenCoin;
+    }
+
+    public int getUserGelenCoin() {
+        return userGelenCoin;
+    }
+
+    public void setUserGelenCoin(int userGelenCoin) {
+        this.userGelenCoin = userGelenCoin;
     }
 }

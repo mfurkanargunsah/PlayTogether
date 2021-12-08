@@ -104,7 +104,7 @@ public class RegisterActivity extends AppCompatActivity {
 
 
                                 if (mUser != null) {
-                                    mKullanici = new Kullanici(txtUsername, txtEmail, mUser.getUid(), gender, Status, false, false, "default", "random");
+                                    mKullanici = new Kullanici(txtUsername, txtEmail, mUser.getUid(), gender, Status, false, false, "default", "random",500,0,0);
                                     mFirestore.collection("Kullanıcılar").document(mUser.getUid())
                                             .set(mKullanici)
                                             .addOnCompleteListener(RegisterActivity.this, task1 -> {
