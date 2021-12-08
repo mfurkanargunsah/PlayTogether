@@ -26,7 +26,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.valorain.playtogether.Model.Kullanici;
 import com.valorain.playtogether.R;
 import com.valorain.playtogether.View.ChatActivity;
@@ -46,7 +48,7 @@ public class HomeFragment extends Fragment {
     private DocumentReference mRef;
     private Kullanici mKullanici;
     private ArrayList<String> mKullaniciList;
-    private HashMap<String, Object> mData;
+    private HashMap<String, Object> mData,coinData;
     private Intent chatIntent;
     private String channelId, selectedGame = null, selectGender = "Random";
     private final Bundle bundle = new Bundle();
@@ -80,6 +82,7 @@ public class HomeFragment extends Fragment {
         mRef = mStore.collection("Kullanıcılar").document(mUser.getUid());
 
 
+
         //Game Select Menu
         gameSelectMethod();
 
@@ -96,6 +99,12 @@ public class HomeFragment extends Fragment {
         mKullaniciList = new ArrayList<>();
         if (!(mUser == null)) {
             btnStart.setOnClickListener(view -> {
+
+                //Coin Update
+               coinData = new HashMap<>();
+                coinData.put("userCoin",user.getUserCoin()-100);
+                mStore.collection("Kullanıcılar").document(mUser.getUid())
+                        .update(coinData);
 
                 //dialog penceresini aç
                 openDialogWindow();
@@ -125,7 +134,7 @@ public class HomeFragment extends Fragment {
                                         for (DocumentSnapshot snapshot : value.getDocuments()) {
                                             mKullanici = snapshot.toObject(Kullanici.class);
                                             if (mKullanici != null) {
-
+                                                mKullanici.setUserCoin(100);
                                                 mKullaniciList.add(mKullanici.getUserID());
                                                 // for random  28-33 // for erkek ve kadın  28-32
 
@@ -223,6 +232,7 @@ public class HomeFragment extends Fragment {
         mData.put("userID", user.getUserID());
         mData.put("arananCins",user.getArananCins());
         mStore.collection("Eşleşme Odası").document(selectedGame).collection("Kullanıcılar").document(mUser.getUid()).set(mData);
+
     }
 
     private void openDialogWindow() {

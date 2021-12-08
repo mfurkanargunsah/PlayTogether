@@ -66,11 +66,11 @@ public class MainActivity extends AppCompatActivity {
     private DocumentReference mRef;
     private Kullanici user;
     public View hView;
-    public TextView userMail,status;
+    public TextView userMail,status,userCoin;
     public CircleImageView userPic;
     private Button buyPremium;
     private static final String ONESIGNAL_APP_ID = "4852c54f-44bb-481c-80f8-e0167adcde29";
-
+    private String userC;
     NetworkChangeList networkChangeList = new NetworkChangeList();
 
 
@@ -142,10 +142,14 @@ public class MainActivity extends AppCompatActivity {
         //nav header updateder
             if (mUser != null){
                 hView = mNav.getHeaderView(0);
+
                 userMail = hView.findViewById(R.id.showUserMail);
                 userMail.setText(mUser.getEmail());
+
                 userPic = hView.findViewById(R.id.nav_header_userPic);
                 buyPremium = hView.findViewById(R.id.nav_header_buyPremium);
+                userCoin = hView.findViewById(R.id.nav_user_coin);
+
 
 
                 mNav.setNavigationItemSelectedListener(null);
@@ -164,6 +168,11 @@ public class MainActivity extends AppCompatActivity {
 
                         if (user != null) {
                             status.setText(user.getStatus());
+
+
+                            userC = String.valueOf(user.getUserCoin());
+                            userCoin.setText(userC);
+
                             if (user.getKullaniciProfil().equals("default")) {
                                 userPic.setImageResource(R.mipmap.ic_launcher);
                             } else {

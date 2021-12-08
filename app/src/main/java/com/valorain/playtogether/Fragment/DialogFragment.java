@@ -1,6 +1,6 @@
 package com.valorain.playtogether.Fragment;
 
-import android.content.Intent;
+
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.LayoutInflater;
@@ -9,8 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
+
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,21 +17,31 @@ import androidx.annotation.Nullable;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FieldValue;
+
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.valorain.playtogether.Model.Kullanici;
 import com.valorain.playtogether.R;
 
+import java.util.HashMap;
 import java.util.Objects;
 
 public class DialogFragment extends androidx.fragment.app.DialogFragment {
 
 
-
+    private View v;
     private  ImageView imgClose;
     private  Button canceled;
     private FirebaseFirestore mStore;
     private FirebaseUser mUser;
+    private Kullanici userc;
+    private DocumentReference mRef;
     private TextView txtInfo;
+    private HashMap<String, Object> coinData;
     private LinearLayout mLinear;
     private String gelenVeri,gelenCins;
     private  int sayac = 5, oyunsayac = 0;
@@ -45,7 +54,8 @@ public class DialogFragment extends androidx.fragment.app.DialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-
+        //
+        v = inflater.inflate(R.layout.dialog_fragment,container,false);
 
         assert getArguments() != null;
         gelenVeri = getArguments().getString("SelectGame");
@@ -53,8 +63,8 @@ public class DialogFragment extends androidx.fragment.app.DialogFragment {
         //FireBase
         mStore = FirebaseFirestore.getInstance();
         mUser = FirebaseAuth.getInstance().getCurrentUser();
-        //
-        View v = inflater.inflate(R.layout.dialog_fragment,container,false);
+        mRef = mStore.collection("Kullanıcılar").document(mUser.getUid());
+
 
         Objects.requireNonNull(getDialog()).setCancelable(false);
 
@@ -62,6 +72,23 @@ public class DialogFragment extends androidx.fragment.app.DialogFragment {
         txtInfo = v.findViewById(R.id.dialog_fragment_textV);
         imgClose = v.findViewById(R.id.close_dialog);
         gameSelect();
+
+        ///
+        mRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (error != null) {
+                    return;
+                }
+                if (value != null && value.exists()) {
+                    userc = value.toObject(Kullanici.class);
+
+                    if (userc != null) {
+
+
+
+                    }}}
+        });
 
 
         imgClose.setOnClickListener(new View.OnClickListener() {
@@ -83,6 +110,14 @@ public class DialogFragment extends androidx.fragment.app.DialogFragment {
                     public void onClick(View view) {
                         canceled.setVisibility(View.GONE);
 
+
+                            //updateCoin
+                        coinData = new HashMap<>();
+                        coinData.put("userCoin",userc.getUserCoin() + 100);
+                        mStore.collection("Kullanıcılar").document(mUser.getUid())
+                                .update(coinData);
+
+
                         new CountDownTimer(5000, 1000) {
                             @Override
                             public void onTick(long l) {
@@ -97,6 +132,7 @@ public class DialogFragment extends androidx.fragment.app.DialogFragment {
                                 mStore.collection("Eşleşme Odası").document(gelenVeri).collection("Kullanıcılar").document(mUser.getUid())
                                         .delete();
                                 canceled.setVisibility(View.GONE);
+
                                 onStop();
                             }
                         }.start();
