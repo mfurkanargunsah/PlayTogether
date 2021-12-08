@@ -14,6 +14,8 @@ import androidx.fragment.app.FragmentTransaction;
 import com.onesignal.OneSignal;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,6 +41,7 @@ import com.valorain.playtogether.Fragment.ProfileFragment;
 import com.valorain.playtogether.Fragment.SettingsFragment;
 import com.valorain.playtogether.Model.Kullanici;
 import com.valorain.playtogether.R;
+import com.valorain.playtogether.utility.NetworkChangeList;
 
 
 import java.util.HashMap;
@@ -68,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
     private Button buyPremium;
     private static final String ONESIGNAL_APP_ID = "4852c54f-44bb-481c-80f8-e0167adcde29";
 
-
+    NetworkChangeList networkChangeList = new NetworkChangeList();
 
 
 
@@ -253,18 +256,30 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+    @Override
+    protected void onStart() {
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkChangeList,filter);
+        super.onStart();
+    }
+
     @Override
     protected void onResume() {
-        super.onResume();
         kullaniciSetOnline(true);
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkChangeList,filter);
+        super.onResume();
+
 
 
     }
 
     @Override
     protected void onStop() {
-        super.onStop();
         kullaniciSetOnline(false);
+         unregisterReceiver(networkChangeList);
+         super.onStop();
 
     }
 

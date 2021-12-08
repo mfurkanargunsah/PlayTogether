@@ -1,6 +1,8 @@
 package com.valorain.playtogether.Fragment;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 
 
@@ -28,6 +30,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.valorain.playtogether.Model.Kullanici;
 import com.valorain.playtogether.R;
 import com.valorain.playtogether.View.ChatActivity;
+import com.valorain.playtogether.utility.NetworkChangeList;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,6 +57,9 @@ public class HomeFragment extends Fragment {
     private Spinner gameSelect;
     private Spinner genderSelect;
     private Spinner nonPre;
+
+    //demo
+    NetworkChangeList networkChangeList = new NetworkChangeList();
 
 
     @Nullable
@@ -158,9 +164,24 @@ public class HomeFragment extends Fragment {
         }
 
 
+
+
         return view;
 
 
+    }
+
+    @Override
+    public void onStart() {
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        requireActivity().registerReceiver(networkChangeList,filter);
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        requireActivity().unregisterReceiver(networkChangeList);
+        super.onStop();
     }
 
     private void createChatRoom1() {
@@ -220,13 +241,13 @@ public class HomeFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 selectGender = "random";
-                user.setArananCins("random");
+
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
                 selectGender =  "random";
-                user.setArananCins("random");
+
             }
         });
         ///devamı
@@ -273,23 +294,23 @@ public class HomeFragment extends Fragment {
 
                 if (i == 0) {
                     selectGender = "random";
-                    user.setArananCins("random");
+
                 }
                 if (i == 1) {
 
                     selectGender = "erkek";
-                    user.setArananCins("erkek");
+
                 }
                 if (i == 2) {
                     selectGender = "kadın";
-                    user.setArananCins("kadın");
+
                 }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
                 selectGender = "random";
-                user.setArananCins("random");
+
 
             }
         });

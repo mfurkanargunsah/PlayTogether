@@ -20,7 +20,7 @@
         <item>Valorant</item>
         <item>CS:GO</item>
         <item>Pubg</item>
-       <item>Dota2</item>
+        <item>Dota2</item>
     </string-array>
     <string-array name="gender_list">
         <item>Random</item>
