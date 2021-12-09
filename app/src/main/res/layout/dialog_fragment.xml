@@ -7,10 +7,10 @@
 
 
     <LinearLayout
-        android:layout_width="300dp"
-        android:layout_height="400dp"
+        android:layout_width="350dp"
+        android:layout_height="450dp"
         android:id="@+id/dialog_fragment_background"
-        android:background="@drawable/alert_dialog_bg"
+        android:background="@drawable/dialog_other"
         android:orientation="vertical">
 
         <ImageView
@@ -32,7 +32,6 @@
                 style="@style/SpinKitView.Large.MultiplePulse"
                 android:layout_width="180dp"
                 android:layout_height="180dp"
-                android:visibility="visible"
                 android:layout_gravity="center"
                 app:SpinKit_Color="@color/bgEndColor" />
 
