@@ -48,7 +48,7 @@ import java.security.AccessController;
 public class fullScreenImageFragment extends DialogFragment {
 
     private static final int REQUEST_CODE = 100;
-    private ImageView fullScreenImage,dismissDialog,gecici;
+    private ImageView fullScreenImage,dismissDialog;
     private View  view;
     private Button btnSave;
     private Uri imgSrc;
@@ -67,7 +67,7 @@ public class fullScreenImageFragment extends DialogFragment {
             dismissDialog = view.findViewById(R.id.close_image_dialog);
             fullScreenImage = view.findViewById(R.id.fullscreen_image);
 
-            //gelen veri
+            //incoming data
              imgSrc = Uri.parse(getArguments().getString("imgSrc"));
 
                 //change imageview image

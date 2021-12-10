@@ -36,7 +36,7 @@ public class deleteChatDialog extends DialogFragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_delete_chat_dialog, container, false);
 
-        gelenKpos = getArguments().getString("hedefID");
+        gelenKpos = getArguments().getString("targetID");
         //firebase
         mAuth = FirebaseAuth.getInstance();
         mUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -57,11 +57,11 @@ public class deleteChatDialog extends DialogFragment {
             @Override
             public void onClick(View view) {
 
-                mStore.collection("ChatRoom").document(mUser.getUid()).collection("Kanallar").document(gelenKpos).delete()
+                mStore.collection("ChatRoom").document(mUser.getUid()).collection("Channels").document(gelenKpos).delete()
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void unused) {
-                                Toast.makeText(getContext(),"Sohbet Silindi.",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(),"Chat Deleted.",Toast.LENGTH_SHORT).show();
                                 dismiss();
                             }
                         }).addOnFailureListener(new OnFailureListener() {

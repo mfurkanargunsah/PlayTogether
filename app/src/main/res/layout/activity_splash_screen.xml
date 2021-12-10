@@ -9,9 +9,10 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:text="WELCOME"
+        android:text="PlayTogether"
         android:gravity="center"
         android:textSize="40sp"
+        android:textStyle="bold"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:textColor="@color/white"

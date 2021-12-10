@@ -8,16 +8,16 @@
                 <item
                     android:id="@+id/nav_menu_home"
                     android:icon="@drawable/menu_home"
-                    android:title="Anasayfa"
+                    android:title="HomePage"
                     />
                 <item
                     android:id="@+id/nav_menu_profile"
                     android:icon="@drawable/menu_person"
-                    android:title="Profil" />
+                    android:title="Profile" />
                 <item
                     android:id="@+id/nav_menu_chat"
                     android:icon="@drawable/menu_chat"
-                    android:title="Sohbetler"
+                    android:title="Chats"
                     />
             </menu>
         </item>
@@ -31,12 +31,12 @@
                 <item
                     android:id="@+id/nav_menu_settings"
                     android:icon="@drawable/menu_settings"
-                    android:title="Ayarlar"
+                    android:title="Settings"
                     />
                 <item
                     android:id="@+id/nav_menu_exit"
                     android:icon="@drawable/menu_exit"
-                    android:title="Çıkış"
+                    android:title="Exit"
                     />
 
 

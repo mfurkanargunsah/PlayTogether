@@ -13,20 +13,20 @@
         android:paddingTop="30dp"
          android:layout_height="wrap_content">
 
-         <Button
-             android:layout_alignParentEnd="true"
-             android:layout_width="150dp"
-             android:id="@+id/profil_fragment_edit_button"
-             android:layout_marginBottom="40dp"
-             android:text="Düzenle"
-             android:visibility="visible"
-             android:layout_height="50dp"/>
+        <Button
+            android:id="@+id/profil_fragment_edit_button"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="40dp"
+            android:text="EDIT PROFILE"
+            android:visibility="visible" />
         <Button
             android:layout_alignParentEnd="true"
             android:layout_width="150dp"
             android:id="@+id/profil_fragment_cancel_button"
             android:layout_marginBottom="40dp"
-            android:text="İptal"
+            android:text="Cancel"
             android:visibility="gone"
             android:layout_height="50dp"/>
 
@@ -92,7 +92,7 @@
 
     <Button
         android:layout_width="100dp"
-        android:text="Onayla"
+        android:text="Save"
         android:visibility="gone"
         android:id="@+id/profil_fragment_onay_button"
         android:layout_marginTop="20dp"

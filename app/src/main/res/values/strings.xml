@@ -4,18 +4,18 @@
     <string name="nav_close">Close</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="yeni_hesap_olu_tur">Yeni Hesap Oluştur</string>
-    <string name="kullan_c_ad">Kullanıcı Adı</string>
-    <string name="eposta">Eposta</string>
-    <string name="Sifre">Şifre</string>
-    <string name="erkek">Erkek</string>
-    <string name="kadin">Kadın</string>
-    <string name="cinsiyetiniz">Cinsiyetiniz:</string>
-    <string name="kullanicisözlesmesi">Kullanım koşulları ve gizlilik sözleşmesini okudum, kabul ediyorum.</string>
-    <string name="hesap_olu_tur">Hesap Oluştur</string>
+    <string name="createAccount">Create a New Account</string>
+    <string name="userName">Username</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="gender_male">Male</string>
+    <string name="gender_female">Female</string>
+    <string name="gender_select">Gender:</string>
+    <string name="term_and_useAgreement">I have read and accept the terms of use and agreement.</string>
+    <string name="createAcc">Create Account</string>
 
     <string-array name="game_list">
-        <item>Farketmez</item>
+        <item>Other</item>
         <item>League of Legends</item>
         <item>Valorant</item>
         <item>CS:GO</item>
@@ -24,8 +24,8 @@
     </string-array>
     <string-array name="gender_list">
         <item>Random</item>
-        <item>Erkek</item>
-        <item>Kadın</item>
+        <item>Male</item>
+        <item>Female</item>
     </string-array>
 
     <string-array name="non_premium">
@@ -35,6 +35,9 @@
     </string-array>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
-    <string name="galeriye_kaydet">Galeriye Kaydet</string>
+
+    <string name="AdsId">ca-app-pub-5527119095806838/7035051795</string>
+    <string name="AppId">ca-app-pub-5527119095806838~3295117336</string>
+    <string name="testAdsId">ca-app-pub-3940256099942544/5224354917</string>
 
 </resources>

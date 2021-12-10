@@ -2,14 +2,14 @@ package com.valorain.playtogether.Model;
 
 public class Chat {
 
-    private String mesajIcerigi, gonderen, alici,mesajTipi,docId,userName,imgProfil;
+    private String userMessage, sender, receiver, messageType,docId,userName,imgProfil;
 
 
-    public Chat(String mesajIcerigi, String gonderen, String alici, String mesajTipi, String docId,String imgProfil) {
-        this.mesajIcerigi = mesajIcerigi;
-        this.gonderen = gonderen;
-        this.alici = alici;
-        this.mesajTipi = mesajTipi;
+    public Chat(String userMessage, String sender, String receiver, String messageType, String docId, String imgProfil) {
+        this.userMessage = userMessage;
+        this.sender = sender;
+        this.receiver = receiver;
+        this.messageType = messageType;
         this.docId = docId;
       //  this.userName = userName;
         this.imgProfil = imgProfil;
@@ -18,36 +18,36 @@ public class Chat {
     public Chat() {
     }
 
-    public String getMesajIcerigi() {
-        return mesajIcerigi;
+    public String getUserMessage() {
+        return userMessage;
     }
 
-    public void setMesajIcerigi(String mesajIcerigi) {
-        this.mesajIcerigi = mesajIcerigi;
+    public void setUserMessage(String userMessage) {
+        this.userMessage = userMessage;
     }
 
-    public String getGonderen() {
-        return gonderen;
+    public String getSender() {
+        return sender;
     }
 
-    public void setGonderen(String gonderen) {
-        this.gonderen = gonderen;
+    public void setSender(String sender) {
+        this.sender = sender;
     }
 
-    public String getAlici() {
-        return alici;
+    public String getReceiver() {
+        return receiver;
     }
 
-    public void setAlici(String alici) {
-        this.alici = alici;
+    public void setReceiver(String receiver) {
+        this.receiver = receiver;
     }
 
-    public String getMesajTipi() {
-        return mesajTipi;
+    public String getMessageType() {
+        return messageType;
     }
 
-    public void setMesajTipi(String mesajTipi) {
-        this.mesajTipi = mesajTipi;
+    public void setMessageType(String messageType) {
+        this.messageType = messageType;
     }
 
     public String getDocId() {

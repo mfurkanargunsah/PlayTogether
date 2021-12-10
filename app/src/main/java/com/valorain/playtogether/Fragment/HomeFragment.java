@@ -26,10 +26,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.valorain.playtogether.Model.Kullanici;
+import com.valorain.playtogether.Model.dbUser;
 import com.valorain.playtogether.R;
 import com.valorain.playtogether.View.ChatActivity;
 import com.valorain.playtogether.utility.NetworkChangeList;
@@ -42,12 +40,12 @@ import java.util.UUID;
 
 public class HomeFragment extends Fragment {
     private View view;
-    private Kullanici user;
+    private dbUser user;
     private FirebaseUser mUser;
     private FirebaseFirestore mStore;
     private DocumentReference mRef;
-    private Kullanici mKullanici;
-    private ArrayList<String> mKullaniciList;
+    private dbUser mDbUser;
+    private ArrayList<String> mUserList;
     private HashMap<String, Object> mData,coinData;
     private Intent chatIntent;
     private String channelId, selectedGame = null, selectGender = "Random";
@@ -79,7 +77,9 @@ public class HomeFragment extends Fragment {
         //firebase tanım
         mUser = FirebaseAuth.getInstance().getCurrentUser();
         mStore = FirebaseFirestore.getInstance();
-        mRef = mStore.collection("Kullanıcılar").document(mUser.getUid());
+        mRef = mStore.collection("UserList").document(mUser.getUid());
+
+
 
 
 
@@ -96,14 +96,14 @@ public class HomeFragment extends Fragment {
 
 
         //kullanıcı listesi çekme
-        mKullaniciList = new ArrayList<>();
+        mUserList = new ArrayList<>();
         if (!(mUser == null)) {
             btnStart.setOnClickListener(view -> {
 
                 //Coin Update
                coinData = new HashMap<>();
                 coinData.put("userCoin",user.getUserCoin()-100);
-                mStore.collection("Kullanıcılar").document(mUser.getUid())
+                mStore.collection("UserList").document(mUser.getUid())
                         .update(coinData);
 
                 //dialog penceresini aç
@@ -124,30 +124,30 @@ public class HomeFragment extends Fragment {
 
 
                         //veri getir
-                        mStore.collection("Eşleşme Odası").document(selectedGame).collection("Kullanıcılar")
+                        mStore.collection("Matching Room").document(selectedGame).collection("Users")
                                 .addSnapshotListener((value, error) -> {
 
 
                                     if (value != null) {
 
-                                        mKullaniciList.clear();
+                                        mUserList.clear();
                                         for (DocumentSnapshot snapshot : value.getDocuments()) {
-                                            mKullanici = snapshot.toObject(Kullanici.class);
-                                            if (mKullanici != null) {
-                                                mKullanici.setUserCoin(100);
-                                                mKullaniciList.add(mKullanici.getUserID());
-                                                // for random  28-33 // for erkek ve kadın  28-32
+                                            mDbUser = snapshot.toObject(dbUser.class);
+                                            if (mDbUser != null) {
+                                                mDbUser.setUserCoin(100);
+                                                mUserList.add(mDbUser.getUserID());
+
 
                                             }
                                         }
-                                        if (mKullaniciList.size() < 2) {
+                                        if (mUserList.size() < 2) {
                                             return;
                                         }
 
 
                                             //Random Eşleşme İçin
                                             //Kullanıcı 0 için Sohbet Odası Oluştur
-                                            if (mUser.getUid().equals(mKullaniciList.get(0))) {
+                                            if (mUser.getUid().equals(mUserList.get(0))) {
 
                                                 createChatRoom0();
                                                 mDialogFragment.dismiss();
@@ -155,7 +155,7 @@ public class HomeFragment extends Fragment {
                                             }
 
                                             //Kullanıcı 1 için Sohbet Odası Oluştur
-                                            if (mUser.getUid().equals(mKullaniciList.get(1))) {
+                                            if (mUser.getUid().equals(mUserList.get(1))) {
 
                                                 createChatRoom1();
                                                 mDialogFragment.dismiss();
@@ -194,12 +194,12 @@ public class HomeFragment extends Fragment {
     }
 
     private void createChatRoom1() {
-        mStore.collection("ChatRoom").document(mKullaniciList.get(0)).collection("Kanallar").document(mUser.getUid()).set(mData)
+        mStore.collection("ChatRoom").document(mUserList.get(0)).collection("Channels").document(mUser.getUid()).set(mData)
                 .addOnCompleteListener(task -> {
                     chatIntent = new Intent(view.getContext(), ChatActivity.class);
                     channelId = UUID.randomUUID().toString();
-                    chatIntent.putExtra("channelId", channelId);
-                    chatIntent.putExtra("hedefId", mKullaniciList.get(0));
+                    chatIntent.putExtra("channelID", channelId);
+                    chatIntent.putExtra("targetID", mUserList.get(0));
                     chatIntent.putExtra("selectGame", selectedGame);
                     chatIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(chatIntent);
@@ -209,13 +209,13 @@ public class HomeFragment extends Fragment {
 
     private void createChatRoom0() {
 
-        mStore.collection("ChatRoom").document(mKullaniciList.get(1)).collection("Kanallar").document(mUser.getUid()).set(mData)
+        mStore.collection("ChatRoom").document(mUserList.get(1)).collection("Channels").document(mUser.getUid()).set(mData)
                 .addOnCompleteListener(task -> {
                     chatIntent = new Intent(view.getContext(), ChatActivity.class);
 
                     channelId = UUID.randomUUID().toString();
-                    chatIntent.putExtra("channelId", channelId);
-                    chatIntent.putExtra("hedefId", mKullaniciList.get(1));
+                    chatIntent.putExtra("channelID", channelId);
+                    chatIntent.putExtra("targetID", mUserList.get(1));
                     chatIntent.putExtra("selectGame", selectedGame);
                     chatIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(chatIntent);
@@ -226,12 +226,11 @@ public class HomeFragment extends Fragment {
 
     private void createMatchingRoom() {
         mData = new HashMap<>();
-        mData.put("cins", user.getCins());
-        mData.put("kullaniciAdi", user.getKullaniciAdi());
-        mData.put("kullaniciProfil", user.getKullaniciProfil());
+        mData.put("gender", user.getGender());
+        mData.put("userName", user.getUserName());
+        mData.put("profilePics", user.getProfilePics());
         mData.put("userID", user.getUserID());
-        mData.put("arananCins",user.getArananCins());
-        mStore.collection("Eşleşme Odası").document(selectedGame).collection("Kullanıcılar").document(mUser.getUid()).set(mData);
+        mStore.collection("Matching Room").document(selectedGame).collection("Users").document(mUser.getUid()).set(mData);
 
     }
 
@@ -268,7 +267,7 @@ public class HomeFragment extends Fragment {
             }
 
             if (value != null && value.exists()) {
-                user = value.toObject(Kullanici.class);
+                user = value.toObject(dbUser.class);
 
                 if (user != null) {
 
@@ -308,11 +307,11 @@ public class HomeFragment extends Fragment {
                 }
                 if (i == 1) {
 
-                    selectGender = "erkek";
+                    selectGender = "male";
 
                 }
                 if (i == 2) {
-                    selectGender = "kadın";
+                    selectGender = "female";
 
                 }
             }
@@ -337,7 +336,7 @@ public class HomeFragment extends Fragment {
 
 
                 if (i == 0) {
-                    selectedGame = "Farketmez";
+                    selectedGame = "Other";
                 }
                 if (i == 1) {
                     selectedGame = "LeaugeOfLegends";
@@ -359,7 +358,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
 
-                selectedGame = "Farketmez";
+                selectedGame = "Other";
 
             }
         });

@@ -3,7 +3,6 @@ package com.valorain.playtogether.Fragment;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -22,8 +20,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.valorain.playtogether.Model.Chat;
-import com.valorain.playtogether.Model.Kullanici;
+import com.valorain.playtogether.Model.dbUser;
 import com.valorain.playtogether.R;
 import com.valorain.playtogether.adapter.MesajlarAdapter;
 
@@ -36,9 +33,9 @@ public class ChatFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private FirebaseFirestore mFireStore;
     private Query mQuery;
-    private ArrayList<Kullanici> mArrayList;
-    private Kullanici mKullanici;
-    private MesajlarAdapter mesajlarAdapter;
+    private ArrayList<dbUser> mArrayList;
+    private dbUser mDbUser;
+    private MesajlarAdapter mesajlarAdapter; //Messages Adapter
     private FirebaseUser mUser;
 
 
@@ -54,14 +51,14 @@ public class ChatFragment extends Fragment {
 
         mFireStore = FirebaseFirestore.getInstance();
         mUser = FirebaseAuth.getInstance().getCurrentUser();
-        mArrayList = new ArrayList<Kullanici>();
+        mArrayList = new ArrayList<dbUser>();
 
         mRecyclerView = v.findViewById(R.id.chat_fragment_recyclerView);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(v.getContext(),LinearLayoutManager.VERTICAL,false));
 
 
-        mQuery = mFireStore.collection("ChatRoom").document(mUser.getUid()).collection("Kanallar");
+        mQuery = mFireStore.collection("ChatRoom").document(mUser.getUid()).collection("Channels");
         mQuery.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -75,10 +72,10 @@ public class ChatFragment extends Fragment {
 
 
                     for (DocumentSnapshot snapshot : value.getDocuments()){
-                        mKullanici = snapshot.toObject(Kullanici.class);
+                        mDbUser = snapshot.toObject(dbUser.class);
 
-                        if (mKullanici != null) {
-                            mArrayList.add(mKullanici);
+                        if (mDbUser != null) {
+                            mArrayList.add(mDbUser);
 
 
                         }

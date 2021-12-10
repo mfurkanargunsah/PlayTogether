@@ -57,7 +57,7 @@ public class LoginActivity extends AppCompatActivity {
             txtEmail = edtEmail.getText().toString();
             txtPassword = edtPassword.getText().toString();
             mProgress = new ProgressDialog(LoginActivity.this);
-            mProgress.setTitle("Giriş Yapılıyor...");
+            mProgress.setTitle("Logging in...");
             mProgress.show();
             if (!TextUtils.isEmpty(txtEmail)) {
                 if (!TextUtils.isEmpty(txtPassword)) {
@@ -67,28 +67,28 @@ public class LoginActivity extends AppCompatActivity {
                                 if (task.isSuccessful()) {
 
                                     progressAyar();
-                                    Toast.makeText(LoginActivity.this, "Giriş Başarılı", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
                                     startActivity(new Intent(LoginActivity.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                                     finish();
                                 } else {
                                     progressAyar();
-                                    Toast.makeText(LoginActivity.this, "Kullanıcı Adı veya Şifre yanlış", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(LoginActivity.this, "Username or password is wrong", Toast.LENGTH_SHORT).show();
                                 }
                             });
 
 
                 } else {
                     progressAyar();
-                    Toast.makeText(LoginActivity.this, "Şifre alanı boş bırakılamaz!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Password field cannot be left blank!", Toast.LENGTH_SHORT).show();
                 }
 
             } else {
                 progressAyar();
-                Toast.makeText(LoginActivity.this, "Email alanı boş bırakılamaz!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "Email field cannot be left blank!", Toast.LENGTH_SHORT).show();
             }
         });
 
-        //üye değilse kayıt sayfasına gönder
+        // send to registration page if not a member
         signUp.setOnClickListener(view -> {
             Intent register = new Intent(LoginActivity.this, RegisterActivity.class);
             startActivity(register);
@@ -98,9 +98,11 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void progressAyar() {
+    private void progressAyar() {  //progress settings
 
         if (mProgress.isShowing())
+
+            //close progress dialog
             mProgress.dismiss();
     }
 

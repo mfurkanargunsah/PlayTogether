@@ -3,58 +3,45 @@ package com.valorain.playtogether.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.ContentInfo;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.storage.FirebaseStorage;
 import com.squareup.picasso.Picasso;
-import com.valorain.playtogether.Fragment.ChatFragment;
 import com.valorain.playtogether.Fragment.deleteChatDialog;
-import com.valorain.playtogether.Model.Chat;
-import com.valorain.playtogether.Model.Kullanici;
+import com.valorain.playtogether.Model.dbUser;
 import com.valorain.playtogether.R;
 import com.valorain.playtogether.View.ChatActivity;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.MesajlarHolder> {
 
-    private ArrayList<Kullanici> mArrayList;
+    private ArrayList<dbUser> mArrayList;
     private Context mContext;
-    private Kullanici mKullanici;
+    private dbUser mDbUser;
     private View v;
     private int kPos;
     private FirebaseFirestore mStore;
     private FirebaseUser mUser;
     private Intent chatIntent;
-    private String hedefID;
+    private String targetID;
 
 
 
-    public MesajlarAdapter(ArrayList<Kullanici> mArrayList, Context mContext) {
+    public MesajlarAdapter(ArrayList<dbUser> mArrayList, Context mContext) {
         this.mArrayList = mArrayList;
         this.mContext = mContext;
     }
@@ -71,7 +58,7 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.Mesajl
     @Override
     public void onBindViewHolder(@NonNull MesajlarHolder holder, int position) {
             mUser = FirebaseAuth.getInstance().getCurrentUser();
-        mKullanici = mArrayList.get(position);
+        mDbUser = mArrayList.get(position);
 
         holder.imgDelete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,7 +75,7 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.Mesajl
                     deleteChat.show(fm,"delete");
 
                     Bundle bundle = new Bundle();
-                    bundle.putString("hedefID",mArrayList.get(kPos).getUserID());
+                    bundle.putString("targetID",mArrayList.get(kPos).getUserID());
                     deleteChat.setArguments(bundle);
 
                 }
@@ -98,14 +85,14 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.Mesajl
         });
 
 
-        if (!mUser.getUid().equals(mKullanici.getUserID()))
-        holder.kullaniciIsmi.setText(mKullanici.getKullaniciAdi());
+        if (!mUser.getUid().equals(mDbUser.getUserID()))
+        holder.userName.setText(mDbUser.getUserName());
 
-        if (mKullanici.getKullaniciProfil().equals("default"))
-            holder.kullaniciProfil.setImageResource(R.mipmap.ic_launcher);
+        if (mDbUser.getProfilePics().equals("default"))
+            holder.userProfilePics.setImageResource(R.mipmap.ic_launcher);
 
         else
-            Picasso.get().load(mKullanici.getKullaniciProfil()).into(holder.kullaniciProfil);
+            Picasso.get().load(mDbUser.getProfilePics()).into(holder.userProfilePics);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,9 +107,9 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.Mesajl
 
                     chatIntent = new Intent(mContext, ChatActivity.class);
 
-                    chatIntent.putExtra("hedefId",mArrayList.get(kPos).getUserID());
-                    chatIntent.putExtra("alici",mArrayList.get(kPos).getKullaniciAdi());
-                    chatIntent.putExtra("imgProfil",mArrayList.get(kPos).getKullaniciProfil());
+                    chatIntent.putExtra("targetID",mArrayList.get(kPos).getUserID());
+                    chatIntent.putExtra("receiver",mArrayList.get(kPos).getUserName());
+                    chatIntent.putExtra("imgProfil",mArrayList.get(kPos).getProfilePics());
                     chatIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     mContext.startActivity(chatIntent);
 
@@ -139,8 +126,8 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.Mesajl
 
     class MesajlarHolder extends RecyclerView.ViewHolder{
 
-       TextView kullaniciIsmi,sonMesaj;
-       CircleImageView kullaniciProfil;
+       TextView userName, lastMessage;
+       CircleImageView userProfilePics;
        ImageView imgDelete;
 
 
@@ -149,9 +136,9 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.Mesajl
        public MesajlarHolder(@NonNull View itemView) {
            super(itemView);
 
-           kullaniciIsmi = itemView.findViewById(R.id.chat_fragment_item_txtKullaniciIsim);
-           kullaniciProfil = itemView.findViewById(R.id.chat_fragment_item_imgKullaniciProfil);
-           sonMesaj = itemView.findViewById(R.id.chat_fragment_item_txtLastMessage);
+           userName = itemView.findViewById(R.id.chat_fragment_item_txtKullaniciIsim);
+           userProfilePics = itemView.findViewById(R.id.chat_fragment_item_imgKullaniciProfil);
+           lastMessage = itemView.findViewById(R.id.chat_fragment_item_txtLastMessage);
            imgDelete = itemView.findViewById(R.id.chat_fragment_item_imgDelete);
        }
    }

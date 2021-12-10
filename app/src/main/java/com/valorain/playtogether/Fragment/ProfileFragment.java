@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.ImageDecoder;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,17 +25,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.auth.api.signin.internal.Storage;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.core.Context;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -48,15 +44,12 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
-import com.valorain.playtogether.Model.Kullanici;
+import com.valorain.playtogether.Model.dbUser;
 import com.valorain.playtogether.R;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.BitSet;
 import java.util.HashMap;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class ProfileFragment extends Fragment {
@@ -72,15 +65,15 @@ public class ProfileFragment extends Fragment {
     private FirebaseUser mUser;
     private FirebaseFirestore mFireStore;
     private DocumentReference mRef;
-    private Kullanici user;
-    private Intent galeriIntent;
+    private dbUser user;
+    private Intent galleryIntent;
     private Uri mUri;
-    private Bitmap gelenResim;
+    private Bitmap incomingImg;
     private ImageDecoder.Source imgSource;
     private ByteArrayOutputStream outputStream;
     private byte[] imgByte;
-    private StorageReference mStorageRef,yeniRef,sRef;
-    private String kayit_yeri,indirmeLink;
+    private StorageReference mStorageRef, newRef,sRef;
+    private String storage_place, downloadLink;
     private HashMap<String,Object> mData;
     private String txtUserName;
 
@@ -107,7 +100,7 @@ public class ProfileFragment extends Fragment {
             mFireStore = FirebaseFirestore.getInstance();
             mStorageRef = FirebaseStorage.getInstance().getReference();
 
-            mRef = mFireStore.collection("Kullanıcılar").document(mUser.getUid());
+            mRef = mFireStore.collection("UserList").document(mUser.getUid());
 
             mRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
                 @Override
@@ -116,17 +109,17 @@ public class ProfileFragment extends Fragment {
                                 Toast.makeText(v.getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                             if (value != null && value.exists()){
-                                user = value.toObject(Kullanici.class);
+                                user = value.toObject(dbUser.class);
 
                                 if (user != null){
 
-                                    edt_userName.setText(user.getKullaniciAdi());
-                                    edt_Email.setText(user.getKullaniciEmail());
+                                    edt_userName.setText(user.getUserName());
+                                    edt_Email.setText(user.getUserEmail());
 
-                                    if (user.getKullaniciProfil().equals("default"))
+                                    if (user.getProfilePics().equals("default"))
                                         imgProfil.setImageResource(R.mipmap.ic_launcher);
                                     else
-                                        Picasso.get().load(user.getKullaniciProfil()).into(imgProfil);
+                                        Picasso.get().load(user.getProfilePics()).into(imgProfil);
 
                                 }
                             }
@@ -143,7 +136,7 @@ public class ProfileFragment extends Fragment {
                     if(ContextCompat.checkSelfPermission(v.getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
                         ActivityCompat.requestPermissions((Activity)v.getContext(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},IZIN_KODU);
                     else
-                        galeriyeGit();
+                        goToGallery();
 
 
 
@@ -176,7 +169,7 @@ public class ProfileFragment extends Fragment {
                     newImg.setVisibility(View.GONE);
 
                     edt_userName.setEnabled(false);
-                    edt_userName.setText(user.getKullaniciAdi());
+                    edt_userName.setText(user.getUserName());
                 }
             });
 
@@ -194,13 +187,13 @@ public class ProfileFragment extends Fragment {
 
 
 
-                    mFireStore.collection("Kullanıcılar").document(mUser.getUid())
-                            .update("kullaniciAdi",edt_userName.getText().toString())
+                    mFireStore.collection("UserList").document(mUser.getUid())
+                            .update("userName",edt_userName.getText().toString())
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void unused) {
                                    nameUpdate(edt_userName);
-                                    Toast.makeText(v.getContext(), "Başarıyla Güncellendi", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(v.getContext(), "Successful", Toast.LENGTH_SHORT).show();
                                 }
                             });
 
@@ -218,10 +211,10 @@ public class ProfileFragment extends Fragment {
     }
 
 
-    private void galeriyeGit(){
+    private void goToGallery(){
 
-        galeriIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(galeriIntent,IZIN_ALINDI_KODU);
+        galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(galleryIntent,IZIN_ALINDI_KODU);
 
     }
 
@@ -229,7 +222,7 @@ public class ProfileFragment extends Fragment {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == IZIN_KODU){
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                galeriyeGit();
+                goToGallery();
         }
 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -245,39 +238,39 @@ public class ProfileFragment extends Fragment {
                     try {
                         if (Build.VERSION.SDK_INT >= 28){
                             imgSource = ImageDecoder.createSource(v.getContext().getContentResolver(),mUri);
-                            gelenResim = ImageDecoder.decodeBitmap(imgSource);
+                            incomingImg = ImageDecoder.decodeBitmap(imgSource);
                         }
                         else{
-                            gelenResim = MediaStore.Images.Media.getBitmap(v.getContext().getContentResolver(),mUri);
+                            incomingImg = MediaStore.Images.Media.getBitmap(v.getContext().getContentResolver(),mUri);
                         }
 
                         outputStream = new ByteArrayOutputStream();
-                        gelenResim.compress(Bitmap.CompressFormat.PNG,75,outputStream);
+                        incomingImg.compress(Bitmap.CompressFormat.PNG,75,outputStream);
                         imgByte = outputStream.toByteArray();
 
-                        kayit_yeri = "Kullanicilar/" + user.getKullaniciEmail() + "/profil.jpg";
-                     sRef =   mStorageRef.child(kayit_yeri);
+                        storage_place = "Users/" + user.getUserEmail() + "/profile.jpg";
+                     sRef =   mStorageRef.child(storage_place);
                         sRef.putBytes(imgByte)
                                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                     @Override
                                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                                        yeniRef = FirebaseStorage.getInstance().getReference(kayit_yeri);
-                                        yeniRef.getDownloadUrl()
+                                        newRef = FirebaseStorage.getInstance().getReference(storage_place);
+                                        newRef.getDownloadUrl()
                                                 .addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                     @Override
                                                     public void onSuccess(Uri uri) {
 
-                                                    indirmeLink = uri.toString();
+                                                    downloadLink = uri.toString();
                                                     mData = new HashMap<>();
-                                                    mData.put("kullaniciProfil",indirmeLink);
-                                                    mFireStore.collection("Kullanıcılar").document(mUser.getUid())
+                                                    mData.put("profilePics", downloadLink);
+                                                    mFireStore.collection("UserList").document(mUser.getUid())
                                                             .update(mData)
                                                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                 @Override
                                                                 public void onComplete(@NonNull Task<Void> task) {
                                                                     if (task.isSuccessful()){
-                                                                            profilGuncelle(indirmeLink);
+                                                                            profilGuncelle(downloadLink);
                                                                     }
                                                                     else
                                                                         Toast.makeText(v.getContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
@@ -314,7 +307,7 @@ public class ProfileFragment extends Fragment {
 
     private void profilGuncelle(final String link){
 
-        mQuery = mFireStore.collection("ChatRoom").document(mUser.getUid()).collection("Kanallar");
+        mQuery = mFireStore.collection("ChatRoom").document(mUser.getUid()).collection("Channels");
         mQuery.get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -325,11 +318,11 @@ public class ProfileFragment extends Fragment {
                             for (DocumentSnapshot snp : queryDocumentSnapshots.getDocuments()){
 
                                 mData = new HashMap<>();
-                                mData.put("kullaniciProfil",link);
-                                mFireStore.collection("ChatRoom").document(snp.getData().get("userID").toString()).collection("Kanallar").document(mUser.getUid())
+                                mData.put("profilePics",link);
+                                mFireStore.collection("ChatRoom").document(snp.getData().get("userID").toString()).collection("Channels").document(mUser.getUid())
                                         .update(mData);
                             }
-                            Toast.makeText(v.getContext(), "Profiliniz Güncellendi!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(v.getContext(), "Updated!", Toast.LENGTH_SHORT).show();
                         }
 
                     }
@@ -343,7 +336,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void nameUpdate(final EditText nameUp){
-        mQuery = mFireStore.collection("ChatRoom").document(mUser.getUid()).collection("Kanallar");
+        mQuery = mFireStore.collection("ChatRoom").document(mUser.getUid()).collection("Channels");
         mQuery.get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -354,12 +347,12 @@ public class ProfileFragment extends Fragment {
                             for (DocumentSnapshot snp : queryDocumentSnapshots.getDocuments()){
 
                                 mData = new HashMap<>();
-                                mData.put("kullaniciAdi",edt_userName.getText().toString());
+                                mData.put("userName",edt_userName.getText().toString());
 
-                                mFireStore.collection("ChatRoom").document(snp.getData().get("userID").toString()).collection("Kanallar").document(mUser.getUid())
+                                mFireStore.collection("ChatRoom").document(snp.getData().get("userID").toString()).collection("Channels").document(mUser.getUid())
                                         .update(mData);
                             }
-                            Toast.makeText(v.getContext(), "Profiliniz Güncellendi!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(v.getContext(), "Updated!", Toast.LENGTH_SHORT).show();
                         }
 
                     }

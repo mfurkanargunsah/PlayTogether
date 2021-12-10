@@ -54,6 +54,20 @@ dependencies {
     //onesignal
     implementation 'com.onesignal:OneSignal:[4.0.0, 4.99.99]'
 
+    //google Ads
+    implementation 'com.google.android.gms:play-services-ads:20.5.0'
+
+    //coutdown timer without background
+
+    implementation 'com.github.iwgang:countdownview:2.1.6'
+    implementation 'io.paperdb:paperdb:2.7.1'
+
+     //slider fragment
+    //ViewPager2
+    implementation 'androidx.viewpager2:viewpager2:1.0.0'
+    //RoundedImageView
+    implementation 'com.makeramen:roundedimageview:2.3.0'
+
 
     //progress bar customs ds
     implementation 'com.github.ybq:Android-SpinKit:1.4.0'

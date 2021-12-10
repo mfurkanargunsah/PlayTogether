@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:textColor="@color/white"
         android:textSize="25dp"
-        android:text="İnternet Bağlantısı Yok!"
+        android:text="No Internet Connection!"
         android:gravity="center"
         android:layout_height="wrap_content"/>
 
@@ -35,7 +35,7 @@
         android:textColor="@color/white"
         android:textStyle="bold"
         android:background="@drawable/loginbuttonbg"
-        android:text="Tekrar Dene"
+        android:text="Retry"
         android:layout_height="50dp"/>
 
 

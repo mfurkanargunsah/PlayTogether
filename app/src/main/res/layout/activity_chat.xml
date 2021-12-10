@@ -89,7 +89,7 @@
             android:layout_height="50dp"
             android:layout_toRightOf="@+id/chat_activity_imgGaleri"
             android:background="@color/bgStartColor"
-            android:hint="Mesaj"
+            android:hint="Message"
             android:paddingLeft="3dp"
             android:textColor="@color/white"
             android:textColorHint="@color/white" />

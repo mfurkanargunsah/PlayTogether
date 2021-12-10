@@ -24,7 +24,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.valorain.playtogether.Model.Kullanici;
+import com.valorain.playtogether.Model.dbUser;
 import com.valorain.playtogether.R;
 
 import java.util.HashMap;
@@ -38,13 +38,13 @@ public class DialogFragment extends androidx.fragment.app.DialogFragment {
     private  Button canceled;
     private FirebaseFirestore mStore;
     private FirebaseUser mUser;
-    private Kullanici userc;
+    private dbUser userc;
     private DocumentReference mRef;
     private TextView txtInfo;
     private HashMap<String, Object> coinData;
     private LinearLayout mLinear;
-    private String gelenVeri,gelenCins;
-    private  int sayac = 5, oyunsayac = 0;
+    private String gelenVeri;
+    private  int sayac = 5;
 
 
 
@@ -63,7 +63,7 @@ public class DialogFragment extends androidx.fragment.app.DialogFragment {
         //FireBase
         mStore = FirebaseFirestore.getInstance();
         mUser = FirebaseAuth.getInstance().getCurrentUser();
-        mRef = mStore.collection("Kullanıcılar").document(mUser.getUid());
+        mRef = mStore.collection("UserList").document(mUser.getUid());
 
 
         Objects.requireNonNull(getDialog()).setCancelable(false);
@@ -81,7 +81,7 @@ public class DialogFragment extends androidx.fragment.app.DialogFragment {
                     return;
                 }
                 if (value != null && value.exists()) {
-                    userc = value.toObject(Kullanici.class);
+                    userc = value.toObject(dbUser.class);
 
                     if (userc != null) {
 
@@ -96,7 +96,7 @@ public class DialogFragment extends androidx.fragment.app.DialogFragment {
                     public void onClick(View view) {
 
 
-                        mStore.collection("Eşleşme Odası").document(gelenVeri).collection("Kullanıcılar").document(mUser.getUid())
+                        mStore.collection("Matching Room").document(gelenVeri).collection("Users").document(mUser.getUid())
                                 .delete();
 
                         imgClose.setVisibility(View.GONE);
@@ -114,7 +114,7 @@ public class DialogFragment extends androidx.fragment.app.DialogFragment {
                             //updateCoin
                         coinData = new HashMap<>();
                         coinData.put("userCoin",userc.getUserCoin() + 100);
-                        mStore.collection("Kullanıcılar").document(mUser.getUid())
+                        mStore.collection("UserList").document(mUser.getUid())
                                 .update(coinData);
 
 
@@ -122,14 +122,14 @@ public class DialogFragment extends androidx.fragment.app.DialogFragment {
                             @Override
                             public void onTick(long l) {
                                sayac = sayac-1;
-                                    txtInfo.setText("İptal Ediliyor Lütfen Bekleyin..."+" " +sayac);
+                                    txtInfo.setText("Cancelling, Please Wait..."+" " +sayac);
                             }
 
                             @Override
                             public void onFinish() {
 
                               //   mStore.collection("Eşleşme Odası").document(mUser.getUid())
-                                mStore.collection("Eşleşme Odası").document(gelenVeri).collection("Kullanıcılar").document(mUser.getUid())
+                                mStore.collection("Matching Room").document(gelenVeri).collection("Users").document(mUser.getUid())
                                         .delete();
                                 canceled.setVisibility(View.GONE);
 
@@ -146,7 +146,7 @@ public class DialogFragment extends androidx.fragment.app.DialogFragment {
 
 
 
-    private void gameSelect(){
+    private void gameSelect(){     // You can change the background of newly added games
 
             if(gelenVeri.equals("LeaugeOfLegends")){
 

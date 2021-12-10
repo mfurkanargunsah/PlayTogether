@@ -18,14 +18,14 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.valorain.playtogether.Model.Kullanici;
+import com.valorain.playtogether.Model.dbUser;
 import com.valorain.playtogether.R;
 
 public class RegisterActivity extends AppCompatActivity {
 
 
     private ProgressDialog mProgress;
-    private Kullanici mKullanici;
+    private dbUser mDbUser;  // Kullanıcı = User
     private FirebaseFirestore mFirestore;
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
@@ -58,21 +58,21 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
         init();
 
-        //Cinsiyet Kodu
+        //Gender Code
 
         radioE.setOnCheckedChangeListener((compoundButton, b) -> {
             if (b)
-                gender = "erkek";
+                gender = "male";
 
         });
         //Kadın ise
         radioK.setOnCheckedChangeListener((compoundButton, b) -> {
             if (b)
-                gender = "kadın";
+                gender = "female";
 
         });
 
-        //CheckBox Seçili mi Değil mi?
+        //is checbox checked?
         btnCheck.setOnCheckedChangeListener((compoundButton, b) -> {
             if (b) {
                 btnCreate.setEnabled(true);
@@ -80,7 +80,7 @@ public class RegisterActivity extends AppCompatActivity {
                 btnCreate.setEnabled(false);
         });
 
-        // Kayıt Ol butonu fonksiyonu
+        // Register button functions
         btnCreate.setOnClickListener(view -> {
             txtUsername = edtUsername.getText().toString();
             txtEmail = edtEmail.getText().toString();
@@ -90,13 +90,13 @@ public class RegisterActivity extends AppCompatActivity {
             if (!TextUtils.isEmpty(txtUsername)) {
                 if (!TextUtils.isEmpty(txtEmail)) {
                     if (!TextUtils.isEmpty(txtPassword)) {
-                        //Bilgiler Doğru İse
+                        //
 
                         mAuth.createUserWithEmailAndPassword(txtEmail, txtPassword).addOnCompleteListener(RegisterActivity.this, task -> {
                             if (task.isSuccessful()) {
                                 //startprogress
                                 mProgress = new ProgressDialog(RegisterActivity.this);
-                                mProgress.setTitle("Kayıt Olunuyor...");
+                                mProgress.setTitle("Registering...");
                                 mProgress.show();
                                 //endprogress
                                 mUser = mAuth.getCurrentUser();
@@ -104,34 +104,34 @@ public class RegisterActivity extends AppCompatActivity {
 
 
                                 if (mUser != null) {
-                                    mKullanici = new Kullanici(txtUsername, txtEmail, mUser.getUid(), gender, Status, false, false, "default", "random",500,0,0);
-                                    mFirestore.collection("Kullanıcılar").document(mUser.getUid())
-                                            .set(mKullanici)
+                                    mDbUser = new dbUser(txtUsername, txtEmail, mUser.getUid(), gender, Status, false, false, "default",500,0,0);
+                                    mFirestore.collection("UserList").document(mUser.getUid())
+                                            .set(mDbUser)
                                             .addOnCompleteListener(RegisterActivity.this, task1 -> {
                                                 if (task1.isSuccessful()) {
                                                     progressAyar();
-                                                    Toast.makeText(RegisterActivity.this, "Kayıt Başarılı", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(RegisterActivity.this, "Register is successful!", Toast.LENGTH_SHORT).show();
                                                     finish();
                                                     startActivity(new Intent(RegisterActivity.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                                                 } else {
                                                     progressAyar();
-                                                    Toast.makeText(RegisterActivity.this, "Bir Hata Oluştu Error Code:101", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(RegisterActivity.this, "Error", Toast.LENGTH_SHORT).show();
                                                 }
                                             });
                                 }
 
                             } else {
                                 progressAyar();
-                                Toast.makeText(RegisterActivity.this, "Bu email adresi kullanılıyor", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(RegisterActivity.this, "This e-mail address is already used", Toast.LENGTH_SHORT).show();
                             }
                         });
 
                     } else
-                        Toast.makeText(RegisterActivity.this, "Şifre alanı boş bırakılamaz.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegisterActivity.this, "Password field cannot be left blank.", Toast.LENGTH_SHORT).show();
                 } else
-                    Toast.makeText(RegisterActivity.this, "Email alanı boş bırakılamaz.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, "E-mail field cannot be left blank.", Toast.LENGTH_SHORT).show();
             } else
-                Toast.makeText(RegisterActivity.this, "Kullanıcı Adı alanı boş bırakılamaz.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RegisterActivity.this, "Username field cannot be left blank.", Toast.LENGTH_SHORT).show();
 
 
         });
@@ -139,9 +139,11 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
-    private void progressAyar() {
+    private void progressAyar() {  //Progress Settings
 
         if (mProgress.isShowing())
+
+            //Close dialog
             mProgress.dismiss();
     }
 

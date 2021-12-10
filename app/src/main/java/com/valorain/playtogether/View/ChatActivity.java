@@ -34,19 +34,16 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 import com.valorain.playtogether.Model.Chat;
-import com.valorain.playtogether.Model.Kullanici;
+import com.valorain.playtogether.Model.dbUser;
 import com.valorain.playtogether.R;
 import com.valorain.playtogether.adapter.ChatAdapter;
 
@@ -63,7 +60,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private static final int IZIN_KODU = 0;
     private static final int IZIN_ALINDI_KODU = 1;
-    private Intent galeriyeGit;
+    private Intent goToGallery;
     private Uri imgUri;
     private String kayitYeri,indirmeLinki;
     private Bitmap imgBitmap;
@@ -73,17 +70,16 @@ public class ChatActivity extends AppCompatActivity {
     private byte[] imgByte;
     private HashMap<String,Object> mData;
     private RecyclerView mRecyclerView;
-    private EditText editMesaj;
-    private String txtMesaj;
+    private EditText editMessage;
+    private String txtMessage;
     private CircleImageView targetPhoto;
     private TextView TargetName;
     private Intent gelenIntent;
-    private String hedefId;
+    private String targetID;
 
-    private DocumentReference hedefRef;
-    private Kullanici hedefKullanici;
+    private DocumentReference targetRef;
+    private dbUser targetDbUser;
     private FirebaseFirestore mFireStore;
-    private String uidadapter;
     private FirebaseUser mUser;
     private StorageReference mStorageRef, yeniRef, sRef,downloadRef;
 
@@ -94,14 +90,13 @@ public class ChatActivity extends AppCompatActivity {
     private ChatAdapter chatAdapter;
     private String docId;
     private String mUID;
-    private String kanalId;
     private String selectGames;
 
 
     private void init()
     {
         mRecyclerView = findViewById(R.id.chat_activity_recycleView);
-        editMesaj = findViewById(R.id.chat_activitiy_edtMessage);
+        editMessage = findViewById(R.id.chat_activitiy_edtMessage);
         targetPhoto = findViewById(R.id.chat_activity_image_target_profile_pic);
         TargetName = findViewById(R.id.chat_activity_txt_target_name);
 
@@ -110,7 +105,7 @@ public class ChatActivity extends AppCompatActivity {
         mFireStore = FirebaseFirestore.getInstance();
         mUser = FirebaseAuth.getInstance().getCurrentUser();
         gelenIntent = getIntent();
-        hedefId = gelenIntent.getStringExtra("hedefId");
+        targetID = gelenIntent.getStringExtra("targetID");
         selectGames = gelenIntent.getStringExtra("selectGame");
         System.out.println(selectGames);
         mUID = mUser.getUid();
@@ -129,15 +124,15 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         mProgress = new ProgressDialog(ChatActivity.this);
-        mProgress.setTitle("Gönderiliyor...");
+        mProgress.setTitle("Sending..");
 
         init();
-        hedefRef = mFireStore.collection("Kullanıcılar").document(hedefId);
-        System.out.println(hedefId);
-        hedefRef.addSnapshotListener(this, (value, error) -> {
+        targetRef = mFireStore.collection("UserList").document(targetID);
+        System.out.println(targetID);
+        targetRef.addSnapshotListener(this, (value, error) -> {
 
                 if (selectGames != null)
-            mFireStore.collection("Eşleşme Odası").document(selectGames).collection("Kullanıcılar").document(mUID).delete();
+            mFireStore.collection("Matching Room").document(selectGames).collection("Users").document(mUID).delete();
 
             if (error != null)
             {
@@ -147,14 +142,14 @@ public class ChatActivity extends AppCompatActivity {
 
             if (value != null && value.exists()) {
 
-                hedefKullanici = value.toObject(Kullanici.class);
+                targetDbUser = value.toObject(dbUser.class);
 
-                if (hedefKullanici != null){
-                    TargetName.setText(hedefKullanici.getKullaniciAdi());
-                    if (hedefKullanici.getKullaniciProfil().equals("default"))
+                if (targetDbUser != null){
+                    TargetName.setText(targetDbUser.getUserName());
+                    if (targetDbUser.getProfilePics().equals("default"))
                         targetPhoto.setImageResource(R.mipmap.ic_launcher);
                     else
-                        Picasso.get().load(hedefKullanici.getKullaniciProfil()).into(targetPhoto);
+                        Picasso.get().load(targetDbUser.getProfilePics()).into(targetPhoto);
 
                 }
 
@@ -170,8 +165,8 @@ public class ChatActivity extends AppCompatActivity {
 
 
         //Gönderen
-        chatQuery = mFireStore.collection("Sohbet Kanalları").document(hedefId).collection("ChatList").document("Alıcı").collection(mUID)
-                .orderBy("mesajTarihi",Query.Direction.ASCENDING);
+        chatQuery = mFireStore.collection("Message Room").document(targetID).collection("ChatList").document("Receiver").collection(mUID)
+                .orderBy("messageDate",Query.Direction.ASCENDING);
         chatQuery.addSnapshotListener(this, (value, error) -> {
             if (error != null){
 
@@ -187,7 +182,7 @@ public class ChatActivity extends AppCompatActivity {
                     mChatList.add(mChat);
 
                 }
-                chatAdapter = new ChatAdapter(mChatList,ChatActivity.this,mUID,hedefId,docId);
+                chatAdapter = new ChatAdapter(mChatList,ChatActivity.this,mUID);
                 mRecyclerView.setAdapter(chatAdapter);
 
 
@@ -199,39 +194,39 @@ public class ChatActivity extends AppCompatActivity {
 
     public void btnMesajGonder(View view){
 
-        txtMesaj = editMesaj.getText().toString();
-        if (!TextUtils.isEmpty(txtMesaj)){
+        txtMessage = editMessage.getText().toString();
+        if (!TextUtils.isEmpty(txtMessage)){
             docId = UUID.randomUUID().toString();
 
             mData = new HashMap<>();
-            mData.put("mesajIcerigi",txtMesaj);
-            mData.put("gonderen",mUser.getUid());
-            mData.put("alici",hedefId);
-            mData.put("mesajTipi","text");
-            mData.put("mesajTarihi", FieldValue.serverTimestamp());
+            mData.put("userMessage", txtMessage);
+            mData.put("sender",mUser.getUid());
+            mData.put("receiver", targetID);
+            mData.put("messageType","text");
+            mData.put("messageDate", FieldValue.serverTimestamp());
             mData.put("docId",docId);
-            mData.put("imgProfil",hedefKullanici.getKullaniciProfil());
+            mData.put("imgProfil", targetDbUser.getProfilePics());
 
 
-            mFireStore.collection("Sohbet Kanalları").document(hedefId).collection("ChatList").document("Alıcı").collection(mUID).document(docId)
+            mFireStore.collection("Message Room").document(targetID).collection("ChatList").document("Receiver").collection(mUID).document(docId)
                     .set(mData)
                     .addOnCompleteListener(ChatActivity.this, task -> {
 
                         if (task.isSuccessful()) {
-                            editMesaj.setText("");
+                            editMessage.setText("");
                             progressAyar();
                         }
                         else
                             Toast.makeText(ChatActivity.this,task.getException().getMessage(),Toast.LENGTH_SHORT).show();
                     });
 
-            mFireStore.collection("Sohbet Kanalları").document(mUID).collection("ChatList").document("Alıcı").collection(hedefId).document(docId)
+            mFireStore.collection("Message Room").document(mUID).collection("ChatList").document("Receiver").collection(targetID).document(docId)
                     .set(mData)
                     .addOnCompleteListener(ChatActivity.this, task -> {
 
                         if (task.isSuccessful()) {
 
-                            editMesaj.setText("");
+                            editMessage.setText("");
                             progressAyar();
                         }
                         else
@@ -239,7 +234,7 @@ public class ChatActivity extends AppCompatActivity {
                     });
 
         }else
-            Toast.makeText(ChatActivity.this,"Boş Mesaj Gönderilemez",Toast.LENGTH_SHORT).show();
+            Toast.makeText(ChatActivity.this,"Empty Message Cannot Be Sent",Toast.LENGTH_SHORT).show();
 
 
     }
@@ -262,8 +257,8 @@ public class ChatActivity extends AppCompatActivity {
 
     private void galeriIntent(){
 
-        galeriyeGit = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(galeriyeGit,IZIN_ALINDI_KODU);
+        goToGallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(goToGallery,IZIN_ALINDI_KODU);
     }
 
     @Override
@@ -292,7 +287,7 @@ public class ChatActivity extends AppCompatActivity {
                     imgBitmap.compress(Bitmap.CompressFormat.JPEG,100,outputStream);
                     imgByte = outputStream.toByteArray();
 
-                    kayitYeri = "ChatImages/" + mUID + "/" + hedefId + "/" + mUID + System.currentTimeMillis() + ".png";
+                    kayitYeri = "ChatImages/" + mUID + "/" + targetID + "/" + mUID + System.currentTimeMillis() + ".png";
                     sRef = mStorageRef.child(kayitYeri);
                     sRef.putBytes(imgByte)
                             .addOnSuccessListener(this,new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -308,17 +303,17 @@ public class ChatActivity extends AppCompatActivity {
                                                     docId = UUID.randomUUID().toString();
 
                                                     mData = new HashMap<>();
-                                                    mData.put("mesajIcerigi",indirmeLinki);
-                                                    mData.put("gonderen",mUser.getUid());
-                                                    mData.put("alici",hedefId);
-                                                    mData.put("mesajTipi","resim");
-                                                    mData.put("mesajTarihi", FieldValue.serverTimestamp());
+                                                    mData.put("userMessage",indirmeLinki);
+                                                    mData.put("sender",mUser.getUid());
+                                                    mData.put("receiver", targetID);
+                                                    mData.put("messageType","Image");
+                                                    mData.put("messageDate", FieldValue.serverTimestamp());
                                                     mData.put("docId",docId);
-                                                    // mData.put("userName",hedefKullanici.getUserID());
-                                                    mData.put("imgProfil",hedefKullanici.getKullaniciProfil());
+                                                    // mData.put("userName",hedefDbUser.getUserID());
+                                                    mData.put("imgProfil", targetDbUser.getProfilePics());
 
 
-                                                    mFireStore.collection("Sohbet Kanalları").document(hedefId).collection("ChatList").document("Alıcı").collection(mUID).document(docId)
+                                                    mFireStore.collection("Message Room").document(targetID).collection("ChatList").document("Receiver").collection(mUID).document(docId)
                                                             .set(mData)
                                                             .addOnCompleteListener(ChatActivity.this, new OnCompleteListener<Void>() {
                                                                 @Override
@@ -327,21 +322,21 @@ public class ChatActivity extends AppCompatActivity {
                                                                     if (task.isSuccessful()) {
 
 
-                                                                        editMesaj.setText("");
+                                                                        editMessage.setText("");
                                                                         progressAyar();
                                                                     }
                                                                     else
                                                                         Toast.makeText(ChatActivity.this,task.getException().getMessage(),Toast.LENGTH_SHORT).show();
                                                                 }
                                                             });
-                                                    mFireStore.collection("Sohbet Kanalları").document(mUID).collection("ChatList").document("Alıcı").collection(hedefId).document(docId)
+                                                    mFireStore.collection("Message Room").document(mUID).collection("ChatList").document("Receiver").collection(targetID).document(docId)
                                                             .set(mData)
                                                             .addOnCompleteListener(ChatActivity.this, new OnCompleteListener<Void>() {
                                                                 @Override
                                                                 public void onComplete(@NonNull Task<Void> task) {
 
                                                                     if (task.isSuccessful()) {
-                                                                        editMesaj.setText("");
+                                                                        editMessage.setText("");
                                                                         progressAyar();
                                                                     }
                                                                     else

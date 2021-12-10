@@ -22,6 +22,7 @@
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/drawable/ic_launcher_foreground.xml" value="1.5178571428571428" />
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/drawable/ic_no_internet.xml" value="2.192857142857143" />
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/drawable/ic_sag_yon.xml" value="2.1464285714285714" />
+        <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/drawable/ic_warning.xml" value="2.0464285714285713" />
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/drawable/loginbg.xml" value="0.3828125" />
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/drawable/loginbuttonbg.xml" value="0.3828125" />
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/drawable/main_button_bg.xml" value="2.567857142857143" />
@@ -49,14 +50,15 @@
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/layout/fragment_full_screen_image.xml" value="0.25" />
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/layout/fragment_fullscreen.xml" value="0.22" />
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/layout/fragment_fullscreen_images.xml" value="0.22173228346456694" />
-        <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/layout/fragment_home.xml" value="0.2" />
+        <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/layout/fragment_home.xml" value="0.5" />
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/layout/fragment_profile.xml" value="0.33" />
-        <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/layout/fragment_settings.xml" value="0.22" />
+        <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/layout/fragment_settings.xml" value="0.33" />
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/layout/fullscreen_image_dialog.xml" value="0.33" />
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/layout/fullscreen_media_dialog.xml" value="0.25" />
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/layout/kullanici_item.xml" value="0.33" />
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/layout/matc_dialog.xml" value="0.18" />
-        <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/layout/nav_header.xml" value="0.25" />
+        <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/layout/nav_header.xml" value="0.5" />
+        <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/layout/slide_item_container.xml" value="0.22" />
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/menu/top_nav_view.xml" value="0.22" />
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="1.5178571428571428" />
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="1.5178571428571428" />

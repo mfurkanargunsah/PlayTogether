@@ -2,8 +2,6 @@ package com.valorain.playtogether.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,37 +17,32 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-import com.valorain.playtogether.Fragment.deleteChatDialog;
 import com.valorain.playtogether.Fragment.fullScreenImageFragment;
 import com.valorain.playtogether.Model.Chat;
 import com.valorain.playtogether.R;
-import com.valorain.playtogether.View.FullScreenActivity;
 
 
 import java.util.ArrayList;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatHolder>
 {
-    private  static final int MESAJ_SOL = 1;
-    private  static final int MESAJ_SAG = 0;
+    private  static final int MESSAGE_LEFT = 1;
+    private  static final int MESSAGE_RIGHT = 0;
 
     private ArrayList<Chat> mChatList;
     private Context mContext;
     private String mUID;
     private View v;
     private Chat mChat;
-    private String hedefUID;
-    private String docUID;
 
 
 
 
-    public ChatAdapter(ArrayList<Chat> mChatList, Context mContext, String mUID,String hedefUID,String docUID) {
+
+    public ChatAdapter(ArrayList<Chat> mChatList, Context mContext, String mUID) {
         this.mChatList = mChatList;
         this.mContext = mContext;
         this.mUID = mUID;
-        this.hedefUID = hedefUID;
-        this.docUID = docUID;
 
 
     }
@@ -61,9 +54,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatHolder>
     @Override
     public ChatHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        if (viewType == MESAJ_SOL)
+        if (viewType == MESSAGE_LEFT)
             v= LayoutInflater.from(mContext).inflate(R.layout.chat_item_left,parent,false);
-        else if (viewType == MESAJ_SAG)
+        else if (viewType == MESSAGE_RIGHT)
             v= LayoutInflater.from(mContext).inflate(R.layout.chat_item_right,parent,false);
         return new ChatHolder(v);
     }
@@ -71,16 +64,16 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatHolder>
     @Override
     public void onBindViewHolder(@NonNull ChatHolder holder, @SuppressLint("RecyclerView") int position) {
         mChat = mChatList.get(position);
-        holder.txtMesaj.setText(mChat.getMesajIcerigi());
+        holder.txtMessage.setText(mChat.getUserMessage());
 
-        if (mChat.getMesajTipi().equals("text")){
+        if (mChat.getMessageType().equals("text")){
             holder.mProgress.setVisibility(View.GONE);
-            holder.imgResim.setVisibility(View.GONE);
-            holder.txtMesaj.setText(mChat.getMesajIcerigi());
+            holder.imgPics.setVisibility(View.GONE);
+            holder.txtMessage.setText(mChat.getUserMessage());
         }
         else {
-            holder.txtMesaj.setVisibility(View.GONE);
-            Picasso.get().load(mChat.getMesajIcerigi()).into(holder.imgResim, new Callback() {
+            holder.txtMessage.setVisibility(View.GONE);
+            Picasso.get().load(mChat.getUserMessage()).into(holder.imgPics, new Callback() {
                 @Override
                 public void onSuccess() {
                     holder.mProgress.setVisibility(View.GONE);
@@ -92,14 +85,14 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatHolder>
                 }
             });
 
-            holder.imgResim.setOnClickListener(new View.OnClickListener() {
+            holder.imgPics.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                   //  Intent browse = new Intent(Intent.ACTION_VIEW);
                  //   browse.setData(Uri.parse(mChatList.get(position).getMesajIcerigi()));
                   //  mContext.startActivity(browse);
                     Bundle bundle = new Bundle();
-                    bundle.putString("imgSrc", mChatList.get(position).getMesajIcerigi());
+                    bundle.putString("imgSrc", mChatList.get(position).getUserMessage());
 
                     FragmentActivity activity = (FragmentActivity)(mContext);
                     FragmentManager fm = activity.getSupportFragmentManager();
@@ -125,8 +118,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatHolder>
     class ChatHolder extends RecyclerView.ViewHolder{
 
 
-         TextView txtMesaj;
-         ImageView  imgResim;
+         TextView txtMessage;
+         ImageView imgPics;
          ProgressBar mProgress;
 
 
@@ -141,8 +134,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatHolder>
              super(itemView);
 
 
-             txtMesaj = itemView.findViewById(R.id.chat_item_txtMesaj);
-             imgResim = itemView.findViewById(R.id.chat_item_imgResim);
+             txtMessage = itemView.findViewById(R.id.chat_item_txtMesaj);
+             imgPics = itemView.findViewById(R.id.chat_item_imgResim);
              mProgress = itemView.findViewById(R.id.chat_item_progress);
 
 
@@ -152,12 +145,12 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatHolder>
 
     @Override
     public int getItemViewType(int position) {
-     if (mChatList.get(position).getAlici().equals(mUID))
+     if (mChatList.get(position).getReceiver().equals(mUID))
 
-             return MESAJ_SOL;
+             return MESSAGE_LEFT;
 
 
      else
-         return MESAJ_SAG;
+         return MESSAGE_RIGHT;
     }
 }
