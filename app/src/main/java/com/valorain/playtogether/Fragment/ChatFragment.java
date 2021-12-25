@@ -35,9 +35,8 @@ public class ChatFragment extends Fragment {
     private Query mQuery;
     private ArrayList<dbUser> mArrayList;
     private dbUser mDbUser;
-    private MesajlarAdapter mesajlarAdapter; //Messages Adapter
     private FirebaseUser mUser;
-
+    private MesajlarAdapter mesajlarAdapter; //Messages Adapter
 
 
 

@@ -336,7 +336,7 @@ public class ChatActivity extends AppCompatActivity {
                                                                 public void onComplete(@NonNull Task<Void> task) {
 
                                                                     if (task.isSuccessful()) {
-                                                                        editMessage.setText("");
+                                                                      editMessage.setText("");
                                                                         progressAyar();
                                                                     }
                                                                     else

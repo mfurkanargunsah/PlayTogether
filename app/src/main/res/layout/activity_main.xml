@@ -13,10 +13,10 @@
    <RelativeLayout
        android:layout_width="match_parent"
        android:layout_height="wrap_content">
+
       <include
           android:id="@+id/toolbar_custom"
-          layout="@layout/bar_layout"
-          />
+          layout="@layout/bar_layout" />
 
       <FrameLayout
           android:id="@+id/main_activity_framelayout"

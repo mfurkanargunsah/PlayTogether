@@ -104,7 +104,7 @@ public class RegisterActivity extends AppCompatActivity {
 
 
                                 if (mUser != null) {
-                                    mDbUser = new dbUser(txtUsername, txtEmail, mUser.getUid(), gender, Status, false, false, "default",500,0,0);
+                                    mDbUser = new dbUser(txtUsername, txtEmail, mUser.getUid(), gender, Status, false, false, "default",500,0,0,"default","","Hi I'm " + txtUsername +"! I'm a new PlayTogether user. Let's play together!");
                                     mFirestore.collection("UserList").document(mUser.getUid())
                                             .set(mDbUser)
                                             .addOnCompleteListener(RegisterActivity.this, task1 -> {

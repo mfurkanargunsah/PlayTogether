@@ -32,10 +32,11 @@ public class MesajlarAdapter extends RecyclerView.Adapter<MesajlarAdapter.Mesajl
     private ArrayList<dbUser> mArrayList;
     private Context mContext;
     private dbUser mDbUser;
-    private View v;
-    private int kPos;
     private FirebaseFirestore mStore;
     private FirebaseUser mUser;
+    private int kPos;
+    private View v;
+
     private Intent chatIntent;
     private String targetID;
 

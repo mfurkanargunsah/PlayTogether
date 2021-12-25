@@ -123,21 +123,20 @@
 
             <TextView
                 android:id="@+id/showStatus"
-                android:layout_width="wrap_content"
+                android:layout_width="70dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:paddingLeft="20dp"
-                android:text="Status"
+                android:text="Free"
                 android:paddingTop="10dp"
                 android:textColor="@color/white"
                 android:textSize="17sp" />
             <Button
-                android:layout_marginRight="150dp"
+                android:layout_marginRight="90dp"
                 android:layout_marginBottom="40dp"
                 android:textSize="10dp"
                 android:id="@+id/nav_header_buyPremium"
                 android:backgroundTint="@color/loginButtonColor"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:layout_width="110dp"
                 android:text="buy premium"
                 android:layout_height="33dp"/>

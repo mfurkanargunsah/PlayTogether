@@ -2,13 +2,13 @@ package com.valorain.playtogether.Model;
 
 public class dbUser {
 
-    private String userName, userEmail,userID, gender,Status, profilePics;
+    private String userName, userEmail,userID, gender,Status, profilePics,userBackground,userAge,userDescription;
     private int userCoin, userSentCoin, userReceivedCoin;
     boolean premium,useronline;
 
 
 
-    public dbUser(String userName, String userEmail, String userID, String gender, String Status, boolean premium, boolean useronline, String profilePics, int userCoin, int userSentCoin, int userReceivedCoin) {
+    public dbUser(String userName, String userEmail, String userID, String gender, String Status, boolean premium, boolean useronline, String profilePics, int userCoin, int userSentCoin, int userReceivedCoin,String userBackground,String userAge,String userDescription) {
         this.userName = userName;
         this.userEmail = userEmail;
         this.userID = userID;
@@ -20,6 +20,9 @@ public class dbUser {
         this.userCoin = userCoin;
         this.userSentCoin = userSentCoin;
         this.userReceivedCoin = userReceivedCoin;
+        this.userBackground = userBackground;
+        this.userAge = userAge;
+        this.userDescription = userDescription;
 
 
     }
@@ -113,5 +116,29 @@ public class dbUser {
 
     public void setUseronline(boolean useronline) {
         this.useronline = useronline;
+    }
+
+    public String getUserBackground() {
+        return userBackground;
+    }
+
+    public void setUserBackground(String userBackground) {
+        this.userBackground = userBackground;
+    }
+
+    public String getUserAge() {
+        return userAge;
+    }
+
+    public void setUserAge(String userAge) {
+        this.userAge = userAge;
+    }
+
+    public String getUserDescription() {
+        return userDescription;
+    }
+
+    public void setUserDescription(String userDescription) {
+        this.userDescription = userDescription;
     }
 }

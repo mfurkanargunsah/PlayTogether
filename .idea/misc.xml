@@ -16,8 +16,12 @@
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/drawable/custom_dialog_mesaj_gonder_btn_bg.xml" value="2.1357142857142857" />
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/drawable/customdialogmesajgonder_mesaj_bg.xml" value="2.1357142857142857" />
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/drawable/edittextbg.xml" value="0.3148148148148148" />
+        <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/drawable/ic_cancel_btn_img.xml" value="2.4107142857142856" />
+        <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/drawable/ic_cancel_button_bg.xml" value="1.9821428571428572" />
+        <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/drawable/ic_check_button_bg.xml" value="1.975" />
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/drawable/ic_coin.xml" value="2.157142857142857" />
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/drawable/ic_delete.xml" value="2.289285714285714" />
+        <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/drawable/ic_ics_cancel.xml" value="2.4107142857142856" />
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/drawable/ic_launcher_background.xml" value="0.3828125" />
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/drawable/ic_launcher_foreground.xml" value="1.5178571428571428" />
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/drawable/ic_no_internet.xml" value="2.192857142857143" />
@@ -27,9 +31,12 @@
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/drawable/loginbuttonbg.xml" value="0.3828125" />
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/drawable/main_button_bg.xml" value="2.567857142857143" />
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/drawable/profil_edit_bg.xml" value="2.1607142857142856" />
+        <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/drawable/slide_item_bg.xml" value="1.5392857142857144" />
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/drawable/spinner_bg.xml" value="1.7107142857142856" />
+        <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/drawable/test_frame_bg.xml" value="2.4107142857142856" />
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/layout/activity_chat.xml" value="0.25" />
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/layout/activity_full_screen.xml" value="0.18" />
+        <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/layout/activity_game.xml" value="0.25" />
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/layout/activity_login.xml" value="0.33" />
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/layout/activity_main.xml" value="0.2" />
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/layout/activity_register.xml" value="0.25" />
@@ -42,6 +49,7 @@
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/layout/color_spinner_layout.xml" value="0.2" />
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/layout/custom_dialog_mesaj_gonder.xml" value="0.18" />
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/layout/dialog_fragment.xml" value="0.25" />
+        <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/layout/dialog_send_message_user.xml" value="1.4720394736842106" />
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/layout/dilog_fragment.xml" value="0.25" />
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/layout/dropdown_item.xml" value="0.25" />
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/layout/fragment_chat.xml" value="0.33" />
@@ -50,15 +58,16 @@
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/layout/fragment_full_screen_image.xml" value="0.25" />
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/layout/fragment_fullscreen.xml" value="0.22" />
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/layout/fragment_fullscreen_images.xml" value="0.22173228346456694" />
-        <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/layout/fragment_home.xml" value="0.5" />
-        <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/layout/fragment_profile.xml" value="0.33" />
-        <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/layout/fragment_settings.xml" value="0.33" />
+        <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/layout/fragment_home.xml" value="0.25" />
+        <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/layout/fragment_profile.xml" value="0.22" />
+        <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/layout/fragment_settings.xml" value="0.2" />
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/layout/fullscreen_image_dialog.xml" value="0.33" />
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/layout/fullscreen_media_dialog.xml" value="0.25" />
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/layout/kullanici_item.xml" value="0.33" />
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/layout/matc_dialog.xml" value="0.18" />
-        <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/layout/nav_header.xml" value="0.5" />
+        <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/layout/nav_header.xml" value="0.25" />
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/layout/slide_item_container.xml" value="0.22" />
+        <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/layout/slide_item_test.xml" value="0.29291666666666666" />
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/menu/top_nav_view.xml" value="0.22" />
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="1.5178571428571428" />
         <entry key="..\:/Users/Furkan/AndroidStudioProjects/PlayTogether/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="1.5178571428571428" />

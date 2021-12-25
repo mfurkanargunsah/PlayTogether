@@ -10,13 +10,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 
-import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.OnUserEarnedRewardListener;
-import com.google.android.gms.ads.interstitial.InterstitialAd;
-import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
@@ -45,7 +41,7 @@ import com.squareup.picasso.Picasso;
 import com.valorain.playtogether.Fragment.ChatFragment;
 import com.valorain.playtogether.Fragment.HomeFragment;
 import com.valorain.playtogether.Fragment.ProfileFragment;
-import com.valorain.playtogether.Fragment.SettingsFragment;
+import com.valorain.playtogether.GameActivity;
 import com.valorain.playtogether.Model.dbUser;
 import com.valorain.playtogether.R;
 import com.valorain.playtogether.utility.NetworkChangeList;
@@ -76,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
     private HomeFragment homeFragment;
     private ProfileFragment profileFragment;
     private ChatFragment chatFragment;
-    private SettingsFragment settingsFragment;
     private FirebaseUser mUser;
     private FirebaseFirestore mFireStore;
     private DocumentReference mRef;
@@ -109,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
          homeFragment = new HomeFragment();
          profileFragment = new ProfileFragment();
          chatFragment = new ChatFragment();
-         settingsFragment = new SettingsFragment();
+
 
 
 
@@ -123,9 +118,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this,LoginActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                 finish();
             }
-
-
-        }
+     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -267,17 +260,15 @@ public class MainActivity extends AppCompatActivity {
 
                 case R.id.nav_menu_settings:
 
-                    setHomeFragment(settingsFragment);
-                    mToolbar.setTitle("Settings");
-                    mDrawer.closeDrawer(GravityCompat.START);
+                    startActivity(new Intent(this, GameActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                     return true;
 
                 case R.id.nav_menu_exit:
                     mDrawer.closeDrawer(GravityCompat.START);
                     kullaniciSetOnline(false);
                     mAuth.signOut();
-                    startActivity(new Intent(MainActivity.this,LoginActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-                    finish();
+                    startActivity(new Intent(this,LoginActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                   finish();
 
                     return true;
             }

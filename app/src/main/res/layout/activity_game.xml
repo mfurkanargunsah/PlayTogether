@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/loginbg"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".GameActivity">
+
+
+
+    <include
+        android:id="@+id/toolbar_custom"
+        layout="@layout/bar_layout" />
+
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPagerImageSlider"
+        android:layout_width="match_parent"
+        android:paddingStart="30dp"
+        android:paddingEnd="30dp"
+        android:layout_centerInParent="true"
+        android:clipToPadding="false"
+        android:foregroundGravity="center"
+        android:overScrollMode="never"
+        android:layout_height="match_parent">
+
+
+    </androidx.viewpager2.widget.ViewPager2>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:background="@drawable/slide_item_bg"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="5dp"
+        android:layout_height="70dp">
+
+        <Button
+            android:id="@+id/settingsFragment_ignore_button"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="50dp"
+            android:background="@drawable/ic_ac_game_back_bg"
+            app:backgroundTint="@null" />
+
+        <Button
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/settingsFragmentt_report_btn"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/ic_report"
+            app:backgroundTint="@null" />
+
+
+        <Button
+            android:id="@+id/settingsFragmentt_accept_button"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="50dp"
+
+            android:background="@drawable/ic_ics_tick"
+            app:backgroundTint="@null" />
+
+    </RelativeLayout>
+
+
+
+
+
+
+</RelativeLayout>
